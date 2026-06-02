@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CapyTalk — Capybara Inc</title>
+    <style>
+        :root {
+            --bg: #0a0e14;
+            --surface: #131820;
+            --surface2: #1a1f2b;
+            --text: #d4d8e0;
+            --text2: #8892a4;
+            --accent: #f4a83d;
+            --accent2: #d4892b;
+            --green: #7bc67e;
+            --red: #e0556a;
+            --capybara: #c4956a;
+            --border: #1e2636;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #06080c;
+            color: var(--text);
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ========== ЗАГРУЗОЧНЫЙ ЭКРАН ========== */
+        .splash-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(160deg, #0a0e14 0%, #111827 50%, #0d1117 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
+        .splash-logo {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 24px;
+            animation: float 2s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-16px);
+            }
+        }
+        .capybara-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .splash-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f4a83d, #f0c27a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .splash-subtitle {
+            color: var(--text2);
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .splash-company {
+            position: absolute;
+            bottom: 40px;
+            color: var(--text2);
+            font-size: 11px;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+        .splash-loader {
+            width: 80px;
+            height: 3px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 28px;
+            overflow: hidden;
+        }
+        .splash-loader-bar {
+            height: 100%;
+            width: 30%;
+            background: var(--accent);
+            border-radius: 3px;
+            animation: loading 1.2s ease-in-out infinite;
+        }
+        @keyframes loading {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(350%);
+            }
+        }
+
+        /* ========== КАПИБАРА-ЦЕНЗОР ========== */
+        .capybara-censor {
+            position: fixed;
+            z-index: 999;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: scale(0);
+        }
+        .capybara-censor.active {
+            opacity: 1;
+            transform: scale(1);
+            animation: censorBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes censorBounce {
+            0% {
+                transform: scale(0) rotate(-20deg);
+            }
+            60% {
+                transform: scale(1.15) rotate(5deg);
+            }
+            80% {
+                transform: scale(0.95) rotate(-2deg);
+            }
+            100% {
+                transform: scale(1) rotate(0);
+            }
+        }
+        .censor-speech {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #333;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .capybara-censor.active .censor-speech {
+            opacity: 1;
+            animation: speechPop 0.4s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        @keyframes speechPop {
+            0% {
+                transform: translateX(-50%) scale(0);
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        /* ========== ОСНОВНОЕ ПРИЛОЖЕНИЕ ========== */
+        .app {
+            width: 100%;
+            max-width: 480px;
+            height: 95dvh;
+            max-height: 800px;
+            background: var(--surface);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        /* Хедер */
+        .header {
+            background: var(--surface2);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .header-logo {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .header-status {
+            font-size: 11px;
+            color: var(--text2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #555;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .status-dot.online {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(123, 198, 126, 0.5);
+        }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text2);
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .icon-btn:active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        /* Комнаты */
+        .room-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 24px;
+            gap: 16px;
+        }
+        .room-screen.hidden {
+            display: none;
+        }
+        .room-illustration {
+            width: 100px;
+            height: 100px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        .room-label {
+            font-size: 13px;
+            color: var(--text2);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: -6px;
+        }
+        .room-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            color: #fff;
+            font-size: 17px;
+            text-align: center;
+            letter-spacing: 3px;
+            outline: none;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .room-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(244, 168, 61, 0.1);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #1a1a1a;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:active {
+            border-color: var(--accent);
+            background: rgba(244, 168, 61, 0.05);
+        }
+        .room-hint {
+            font-size: 11px;
+            color: var(--text2);
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        /* Чат */
+        .chat-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-screen.hidden {
+            display: none;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            scroll-behavior: smooth;
+        }
+        .messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        .msg {
+            max-width: 82%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            word-break: break-word;
+            font-size: 14px;
+            line-height: 1.45;
+            position: relative;
+            animation: msgIn 0.25s ease;
+        }
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .msg.sent {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #1a1a1a;
+            border-bottom-right-radius: 6px;
+            font-weight: 500;
+        }
+        .msg.received {
+            align-self: flex-start;
+            background: var(--surface2);
+            color: var(--text);
+            border-bottom-left-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .msg.system {
+            align-self: center;
+            background: transparent;
+            color: var(--text2);
+            font-size: 11px;
+            padding: 4px 10px;
+            letter-spacing: 0.5px;
+        }
+        .msg .time {
+            font-size: 9px;
+            opacity: 0.5;
+            margin-top: 3px;
+            text-align: right;
+        }
+        .msg.sent .time {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Поле ввода */
+        .input-area {
+            display: flex;
+            gap: 8px;
+            padding: 10px 14px 14px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            background: var(--surface);
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 25px;
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .input-area input:focus {
+            border-color: var(--accent);
+        }
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #1a1a1a;
+            font-size: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .send-btn:active {
+            transform: scale(0.9);
+        }
+        .send-btn:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Модалка для сигнала */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.hidden {
+            display: none;
+        }
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        .modal h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .modal p {
+            font-size: 12px;
+            color: var(--text2);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+        .modal textarea {
+            width: 100%;
+            height: 80px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            color: #fff;
+            font-size: 11px;
+            resize: none;
+            outline: none;
+            font-family: monospace;
+        }
+        .modal .btn {
+            margin-top: 10px;
+        }
+        .modal .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+            width: auto;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== ЗАГРУЗОЧНЫЙ ЭКРАН ========== -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo">
+            <svg class="capybara-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Тело капибары -->
+                <ellipse cx="60" cy="65" rx="38" ry="28" fill="#c4956a"/>
+                <ellipse cx="60" cy="62" rx="34" ry="24" fill="#d4a87c"/>
+                <!-- Голова -->
+                <ellipse cx="60" cy="40" rx="22" ry="18" fill="#c4956a"/>
+                <ellipse cx="60" cy="42" rx="18" ry="14" fill="#d4a87c"/>
+                <!-- Уши -->
+                <ellipse cx="44" cy="26" rx="7" ry="5" fill="#a0724a"/>
+                <ellipse cx="76" cy="26" rx="7" ry="5" fill="#a0724a"/>
+                <!-- Глаза -->
+                <circle cx="52" cy="38" r="4" fill="#1a1a1a"/>
+                <circle cx="68" cy="38" r="4" fill="#1a1a1a"/>
+                <circle cx="53" cy="37" r="1.5" fill="#fff"/>
+                <circle cx="69" cy="37" r="1.5" fill="#fff"/>
+                <!-- Нос -->
+                <ellipse cx="60" cy="46" rx="5" ry="3.5" fill="#5a3a2a"/>
+                <ellipse cx="58" cy="45" rx="1.5" ry="1" fill="#3a2218"/>
+                <ellipse cx="62" cy="45" rx="1.5" ry="1" fill="#3a2218"/>
+                <!-- Рот -->
+                <path d="M55 50 Q60 54 65 50" stroke="#5a3a2a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Лапки -->
+                <ellipse cx="38" cy="80" rx="8" ry="5" fill="#a0724a"/>
+                <ellipse cx="82" cy="80" rx="8" ry="5" fill="#a0724a"/>
+                <!-- Хвостик -->
+                <circle cx="98" cy="60" r="5" fill="#a0724a"/>
+            </svg>
+        </div>
+        <div class="splash-title">CapyTalk</div>
+        <div class="splash-subtitle">Secure Messaging</div>
+        <div class="splash-loader">
+            <div class="splash-loader-bar"></div>
+        </div>
+        <div class="splash-company">© Capybara Inc</div>
+    </div>
+
+    <!-- ========== КАПИБАРА-ЦЕНЗОР ========== -->
+    <div class="capybara-censor" id="capybaraCensor">
+        <div class="censor-speech">Пи-пи-пи! 🚫</div>
+        <svg width="80" height="70" viewBox="0 0 80 70" fill="none">
+            <ellipse cx="40" cy="40" rx="25" ry="18" fill="#c4956a"/>
+            <ellipse cx="40" cy="25" rx="15" ry="12" fill="#c4956a"/>
+            <ellipse cx="40" cy="26" rx="12" ry="9" fill="#d4a87c"/>
+            <circle cx="35" cy="24" r="3" fill="#1a1a1a"/>
+            <circle cx="45" cy="24" r="3" fill="#1a1a1a"/>
+            <circle cx="36" cy="23" r="1" fill="#fff"/>
+            <circle cx="46" cy="23" r="1" fill="#fff"/>
+            <ellipse cx="40" cy="30" rx="4" ry="2.5" fill="#5a3a2a"/>
+            <ellipse cx="27" cy="50" rx="6" ry="4" fill="#a0724a"/>
+            <ellipse cx="53" cy="50" rx="6" ry="4" fill="#a0724a"/>
+        </svg>
+    </div>
+
+    <!-- ========== ОСНОВНОЕ ПРИЛОЖЕНИЕ ========== -->
+    <div class="app" id="app">
+        <!-- Хедер -->
+        <div class="header">
+            <svg class="header-logo" viewBox="0 0 40 40" fill="none">
+                <ellipse cx="20" cy="22" rx="12" ry="9" fill="#c4956a"/>
+                <ellipse cx="20" cy="14" rx="8" ry="7" fill="#c4956a"/>
+                <circle cx="17" cy="13" r="2" fill="#1a1a1a"/>
+                <circle cx="23" cy="13" r="2" fill="#1a1a1a"/>
+                <ellipse cx="20" cy="16" rx="2.5" ry="1.5" fill="#5a3a2a"/>
+            </svg>
+            <div class="header-info">
+                <div class="header-title">CapyTalk</div>
+                <div class="header-status">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Не подключено</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="leaveBtn" title="Выйти">🚪</button>
+            </div>
+        </div>
+
+        <!-- Экран комнаты -->
+        <div class="room-screen" id="roomScreen">
+            <svg class="room-illustration" viewBox="0 0 100 100" fill="none">
+                <ellipse cx="50" cy="55" rx="30" ry="22" fill="#1e2636" opacity="0.5"/>
+                <ellipse cx="50" cy="35" rx="18" ry="15" fill="#1e2636" opacity="0.5"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="#f4a83d" stroke-width="1.5" opacity="0.3"
+                stroke-dasharray="4 4"/>
+                <text x="50" y="54" text-anchor="middle" fill="#f4a83d" font-size="20" font-weight="700">#</text>
+            </svg>
+            <div class="room-label">Код комнаты</div>
+            <input type="text" class="room-input" id="roomCodeInput" placeholder="CAPY123" maxlength="20" autocomplete="off">
+            <button class="btn btn-accent" id="joinBtn">🔗 Подключиться</button>
+            <button class="btn btn-outline" id="createBtn">✨ Создать комнату</button>
+            <p class="room-hint">Один код — все ваши устройства</p>
+        </div>
+
+        <!-- Экран чата -->
+        <div class="chat-screen hidden" id="chatScreen">
+            <div class="messages" id="messagesContainer"></div>
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Напишите сообщение..." maxlength="500" autocomplete="off">
+                <button class="send-btn" id="sendBtn">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка сигнала -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal">
+            <h3 id="modalTitle">Обмен ключами</h3>
+            <p id="modalDesc">Скопируйте этот код и передайте на второе устройство</p>
+            <textarea id="modalTextarea" readonly></textarea>
+            <button class="btn btn-accent btn-sm" id="modalCopyBtn">📋 Копировать</button>
+            <button class="btn btn-outline btn-sm" id="modalOkBtn">OK, готово</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== КОНФИГУРАЦИЯ ==========
+            const rtcConfig = {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' }
+                ]
+            };
+
+            // ========== СПИСОК ЗАПРЕЩЁННЫХ СЛОВ ==========
+            const bannedWords = [
+                'капибара', 'capybara', 'капибару', 'капибаре', 'капибары',
+                'сука', 'бля', 'блять', 'хуй', 'пизд', 'еба', 'ёб', 'нах',
+                'иди на', 'пошёл на', 'пошел на', 'fuck', 'shit', 'bitch',
+                'dick', 'ass', 'cunt', 'damn', 'пидор', 'пидр', 'гей',
+                'лох', 'мудак', 'козёл', 'козел', 'дебил', 'дурак',
+                'урод', 'сволочь', 'тварь', 'гад', 'скотина'
+            ];
+
+            // ========== СОСТОЯНИЕ ==========
+            let roomCode = '';
+            let peerConnection = null;
+            let dataChannel = null;
+            let isInitiator = false;
+            let pendingSignalCallback = null;
+
+            // ========== DOM ==========
+            const splashScreen = document.getElementById('splashScreen');
+            const roomScreen = document.getElementById('roomScreen');
+            const chatScreen = document.getElementById('chatScreen');
+            const roomCodeInput = document.getElementById('roomCodeInput');
+            const joinBtn = document.getElementById('joinBtn');
+            const createBtn = document.getElementById('createBtn');
+            const leaveBtn = document.getElementById('leaveBtn');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const messagesContainer = document.getElementById('messagesContainer');
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDesc');
+            const modalTextarea = document.getElementById('modalTextarea');
+            const modalCopyBtn = document.getElementById('modalCopyBtn');
+            const modalOkBtn = document.getElementById('modalOkBtn');
+            const capybaraCensor = document.getElementById('capybaraCensor');
+
+            // ========== ЗАГРУЗОЧНЫЙ ЭКРАН ==========
+            setTimeout(() => {
+                splashScreen.classList.add('hidden');
+                setTimeout(() => splashScreen.remove(), 500);
+            }, 2200);
+
+            // ========== КАПИБАРА-ЦЕНЗОР ==========
+            function containsBannedWord(text) {
+                const lower = text.toLowerCase();
+                return bannedWords.some(word => lower.includes(word));
+            }
+
+            function triggerCensor() {
+                // Позиционируем по центру экрана
+                capybaraCensor.style.left = '50%';
+                capybaraCensor.style.top = '45%';
+                capybaraCensor.style.transform = 'translate(-50%, -50%) scale(1)';
+                capybaraCensor.classList.add('active');
+
+                // Вибрация если доступна
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50, 30, 100]);
+                }
+
+                // Убираем через 1.8 секунды
+                setTimeout(() => {
+                    capybaraCensor.classList.remove('active');
+                }, 1800);
+            }
+
+            // ========== ВСПЛЫВАШКИ (TOAST) ==========
+            function showToast(text, duration = 2000) {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: #1a1f2b;
+                    color: #f4a83d;
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    z-index: 600;
+                    border: 1px solid #f4a83d44;
+                    animation: toastIn 0.3s ease, toastOut 0.3s ${duration/1000 - 0.3}s ease forwards;
+                    pointer-events: none;
+                    white-space: nowrap;
+                `;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), duration);
+            }
+
+            // Анимации для toast
+            const toastStyle = document.createElement('style');
+            toastStyle.textContent = `
+                @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+                @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateX(-50%) translateY(-10px); } }
+            `;
+            document.head.appendChild(toastStyle);
+
+            // ========== СТАТУС ==========
+            function updateStatus(online) {
+                statusDot.classList.toggle('online', online);
+                statusText.textContent = online ? 'Подключено' : 'Не подключено';
+            }
+
+            // ========== СООБЩЕНИЯ ==========
+            function addMessage(text, type) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `msg ${type}`;
+                const now = new Date();
+                const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                msgDiv.innerHTML = `${escapeHTML(text)}<div class="time">${time}</div>`;
+                messagesContainer.appendChild(msgDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            function escapeHTML(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function showChat() {
+                roomScreen.classList.add('hidden');
+                chatScreen.classList.remove('hidden');
+                messageInput.focus();
+            }
+
+            function showRoom() {
+                roomScreen.classList.remove('hidden');
+                chatScreen.classList.add('hidden');
+                messagesContainer.innerHTML = '';
+                updateStatus(false);
+                roomCodeInput.focus();
+            }
+
+            // ========== МОДАЛКА СИГНАЛА ==========
+            function showModal(title, desc, signal, callback) {
+                modalTitle.textContent = title;
+                modalDesc.textContent = desc;
+                modalTextarea.value = signal;
+                modalOverlay.classList.remove('hidden');
+                pendingSignalCallback = callback;
+            }
+
+            function hideModal() {
+                modalOverlay.classList.add('hidden');
+                pendingSignalCallback = null;
+            }
+
+            modalCopyBtn.addEventListener('click', () => {
+                modalTextarea.select();
+                document.execCommand('copy');
+                // Современный метод
+                navigator.clipboard?.writeText(modalTextarea.value).catch(() => {});
+                showToast('✅ Скопировано!');
+            });
+
+            modalOkBtn.addEventListener('click', () => {
+                hideModal();
+                if (pendingSignalCallback) {
+                    pendingSignalCallback();
+                    pendingSignalCallback = null;
+                }
+            });
+
+            // ========== ГЕНЕРАЦИЯ КОДА ==========
+            function generateRoomCode() {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                let code = '';
+                for (let i = 0; i < 6; i++) {
+                    code += chars[Math.floor(Math.random() * chars.length)];
+                }
+                return code;
+            }
+
+            // ========== WebRTC ==========
+            async function createPeerConnection() {
+                if (peerConnection) peerConnection.close();
+                peerConnection = new RTCPeerConnection(rtcConfig);
+
+                peerConnection.oniceconnectionstatechange = () => {
+                    const state = peerConnection.iceConnectionState;
+                    if (state === 'connected' || state === 'completed') {
+                        updateStatus(true);
+                        addMessage('🟢 Соединение установлено', 'system');
+                    } else if (state === 'disconnected' || state === 'failed' || state === 'closed') {
+                        updateStatus(false);
+                        addMessage('🔴 Соединение потеряно', 'system');
+                    }
+                };
+
+                peerConnection.ondatachannel = (event) => {
+                    dataChannel = event.channel;
+                    setupDataChannel(dataChannel);
+                };
+            }
+
+            function setupDataChannel(channel) {
+                channel.onopen = () => {
+                    updateStatus(true);
+                };
+                channel.onclose = () => {
+                    updateStatus(false);
+                };
+                channel.onmessage = (event) => {
+                    const text = event.data;
+                    // Проверка на запрещённые слова
+                    if (containsBannedWord(text)) {
+                        triggerCensor();
+                        addMessage('⚠️ Сообщение скрыто цензором', 'system');
+                    } else {
+                        addMessage(text, 'received');
+                    }
+                };
+            }
+
+            async function waitForIceGathering() {
+                return new Promise((resolve) => {
+                    if (peerConnection.iceGatheringState === 'complete') {
+                        resolve();
+                    } else {
+                        const check = setInterval(() => {
+                            if (peerConnection.iceGatheringState === 'complete') {
+                                clearInterval(check);
+                                resolve();
+                            }
+                        }, 100);
+                        setTimeout(() => { clearInterval(check);
+                            resolve(); }, 6000);
+                    }
+                });
+            }
+
+            async function initiateConnection() {
+                isInitiator = true;
+                await createPeerConnection();
+                dataChannel = peerConnection.createDataChannel('capytalk');
+                setupDataChannel(dataChannel);
+
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                await waitForIceGathering();
+
+                const signal = JSON.stringify(peerConnection.localDescription);
+                showModal('📤 Приглашение', 'Скопируйте и отправьте этот код на второе устройство:', signal, null);
+            }
+
+            async function handleIncomingSignal(signalStr) {
+                try {
+                    const signal = JSON.parse(signalStr);
+                    isInitiator = false;
+                    await createPeerConnection();
+                    await peerConnection.setRemoteDescription(signal);
+
+                    if (signal.type === 'offer') {
+                        const answer = await peerConnection.createAnswer();
+                        await peerConnection.setLocalDescription(answer);
+                        await waitForIceGathering();
+                        const responseSignal = JSON.stringify(peerConnection.localDescription);
+                        showModal('📥 Ответ', 'Скопируйте этот код и отправьте обратно на первое устройство:', responseSignal,
+                            null);
+                    }
+                    // answer применяется автоматически через setRemoteDescription
+                } catch (e) {
+                    alert('❌ Ошибка: ' + e.message);
+                    showRoom();
+                }
+            }
+
+            function cleanupConnection() {
+                if (dataChannel) { dataChannel.close();
+                    dataChannel = null; }
+                if (peerConnection) { peerConnection.close();
+                    peerConnection = null; }
+                updateStatus(false);
+                messagesContainer.innerHTML = '';
+            }
+
+            // ========== ПОДКЛЮЧЕНИЕ К КОМНАТЕ ==========
+            function joinRoom(code) {
+                roomCode = code.trim().toUpperCase();
+                if (!roomCode) {
+                    alert('Введите код комнаты');
+                    return;
+                }
+                roomCodeInput.value = roomCode;
+                showChat();
+                updateStatus(false);
+                addMessage(`🏠 Комната: ${roomCode}`, 'system');
+
+                const mode = confirm(
+                    'Вы создаёте приглашение?\n\n✅ OK — я создаю (первое устройство)\n❌ Отмена — у меня есть код приглашения (второе устройство)');
+                if (mode) {
+                    initiateConnection();
+                } else {
+                    const signalStr = prompt('📥 Вставьте код приглашения от первого устройства:');
+                    if (signalStr) {
+                        handleIncomingSignal(signalStr);
+                    } else {
+                        showRoom();
+                    }
+                }
+            }
+
+            // ========== ОТПРАВКА СООБЩЕНИЯ ==========
+            function sendMessage() {
+                const text = messageInput.value.trim();
+                if (!text) return;
+
+                // Проверка цензуры на своей стороне тоже
+                if (containsBannedWord(text)) {
+                    triggerCensor();
+                    addMessage('⚠️ Капибара-цензор не пропустила сообщение', 'system');
+                    messageInput.value = '';
+                    messageInput.focus();
+                    return;
+                }
+
+                if (!dataChannel || dataChannel.readyState !== 'open') {
+                    showToast('⚠️ Нет соединения');
+                    return;
+                }
+
+                dataChannel.send(text);
+                addMessage(text, 'sent');
+                messageInput.value = '';
+                messageInput.focus();
+            }
+
+            // ========== ОБРАБОТЧИКИ ==========
+            joinBtn.addEventListener('click', () => {
+                const code = roomCodeInput.value.trim();
+                if (code) joinRoom(code);
+                else showToast('Введите код комнаты');
+            });
+
+            createBtn.addEventListener('click', () => {
+                const newCode = generateRoomCode();
+                roomCodeInput.value = newCode;
+                joinRoom(newCode);
+            });
+
+            leaveBtn.addEventListener('click', () => {
+                if (confirm('Выйти из комнаты?')) {
+                    cleanupConnection();
+                    showRoom();
+                    roomCode = '';
+                }
+            });
+
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Наблюдатель за переключением экранов
+            const observer = new MutationObserver(() => {
+                if (!chatScreen.classList.contains('hidden')) {
+                    messageInput.focus();
+                } else {
+                    roomCodeInput.focus();
+                }
+            });
+            observer.observe(chatScreen, { attributes: true, attributeFilter: ['class'] });
+
+            // ========== ИНИЦИАЛИЗАЦИЯ ==========
+            showRoom();
+            updateStatus(false);
+
+            console.log('🦫 CapyTalk v1.0 — Capybara Inc');
+            console.log('📋 Как использовать:');
+            console.log('  1. Устройство A: создайте комнату → OK (создать приглашение) → скопируйте код');
+            console.log('  2. Устройство B: тот же код комнаты → Отмена → вставьте код приглашения → скопируйте ответ');
+            console.log('  3. Устройство A: вставьте ответный код');
+            console.log('  4. Готово! Чат работает ✨');
+            console.log('🛡️ Капибара-цензор активен: следит за матами и словом "капибара"');
+        })();
+    </script>
+</body>
+</html>

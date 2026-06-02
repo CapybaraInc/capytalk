@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CapyTalk • Капибара Инк</title>
+    <!-- Шрифт в стиле Капибары и иконки -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --capy-brown: #6b4c3a;
+            --capy-light: #f5e6d3;
+            --capy-orange: #d98c5b;
+            --bg: #fff8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        /* Главный контейнер телефона */
+        .phone-frame {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        @media (min-width: 420px) {
+            .phone-frame {
+                height: 90vh;
+                max-height: 850px;
+            }
+        }
+
+        /* Хедер */
+        .app-header {
+            background: var(--capy-brown);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo i { font-size: 1.8rem; }
+        .company-tag {
+            font-size: 0.6rem;
+            background: var(--capy-orange);
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Переключение вкладок */
+        .tabs {
+            display: flex;
+            background: var(--capy-light);
+            font-weight: 700;
+            color: var(--capy-brown);
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .tab.active {
+            border-bottom: 3px solid var(--capy-orange);
+            color: var(--capy-orange);
+        }
+
+        /* Контент */
+        .view {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+        .view.active { display: flex; }
+
+        /* Чат */
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #fdf8f3;
+        }
+        .msg-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            word-break: break-word;
+            position: relative;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .msg-sent {
+            align-self: flex-end;
+            background: #d9b99b;
+            color: #3e2723;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-received {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid #e0d6cc;
+            border-bottom-left-radius: 4px;
+        }
+        .msg-info {
+            font-size: 0.65rem;
+            color: #8b5e3c;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+
+        /* Поле ввода */
+        .input-area {
+            display: flex;
+            padding: 10px 15px;
+            background: white;
+            border-top: 1px solid #eee;
+            gap: 10px;
+            align-items: center;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            background: #f9f4ef;
+        }
+        .send-btn {
+            background: var(--capy-orange);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .send-btn:active { background: #b86b3a; transform: scale(0.9); }
+
+        /* Контакты */
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            border-bottom: 1px solid #f0e4d8;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: 0.1s;
+        }
+        .contact-item:active { background: #f5e6d3; }
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: #e7d7c4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .add-contact-form {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        .add-contact-form input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-family: 'Nunito', sans-serif;
+        }
+        .add-btn {
+            background: var(--capy-brown);
+            border: none;
+            color: white;
+            padding: 0 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #c5a48a;
+            padding: 40px 20px;
+        }
+        .empty-state i { font-size: 3rem; }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <div class="app-header">
+        <div class="logo">
+            <i class="fa-solid fa-otter"></i> CapyTalk
+        </div>
+        <div class="company-tag">КАПИБАРА ИНК</div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-view="chat"><i class="fa-regular fa-comment"></i> Чат</div>
+        <div class="tab" data-view="contacts"><i class="fa-regular fa-address-book"></i> Контакты</div>
+    </div>
+
+    <!-- Вкладка Чата -->
+    <div id="chat-view" class="view active">
+        <div id="messages-container" class="messages">
+            <div class="empty-state">
+                <i class="fa-solid fa-mug-hot"></i>
+                <p>Выбери контакт,<br>чтобы начать болтать</p>
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Сообщение..." disabled>
+            <button class="send-btn" id="sendBtn" disabled><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Вкладка Контактов -->
+    <div id="contacts-view" class="view">
+        <div id="contacts-container" class="contact-list">
+            <!-- Здесь будет список -->
+        </div>
+        <div class="add-contact-form">
+            <input type="text" id="newContactId" placeholder="ID друга (капибара-...)">
+            <button class="add-btn" id="addContactBtn">Добавить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Скрипты: Bugout для P2P и основная логика -->
+<script src="https://cdn.jsdelivr.net/npm/bugout@0.0.10/dist/bugout.min.js"></script>
+<script>
+    (function() {
+        // --- Капибара Инк: CapyTalk P2P Messenger ---
+        
+        // Генерация или загрузка ID пользователя
+        function getOrCreateUserId() {
+            let id = localStorage.getItem('capytalk_user_id');
+            if (!id) {
+                const randomNum = Math.floor(Math.random() * 9000) + 1000;
+                id = `капибара-${randomNum}`;
+                localStorage.setItem('capytalk_user_id', id);
+            }
+            return id;
+        }
+
+        const MY_ID = getOrCreateUserId();
+        console.log(`Твой ID: ${MY_ID}`);
+
+        // Управление UI
+        const tabs = document.querySelectorAll('.tab');
+        const views = document.querySelectorAll('.view');
+        const contactsContainer = document.getElementById('contacts-container');
+        const messagesContainer = document.getElementById('messages-container');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const newContactIdInput = document.getElementById('newContactId');
+        const addContactBtn = document.getElementById('addContactBtn');
+
+        // Данные
+        let contacts = JSON.parse(localStorage.getItem('capytalk_contacts') || '[]');
+        let activeContactId = localStorage.getItem('capytalk_active_contact') || null;
+        
+        // P2P объекты и история
+        let bugoutInstance = null;
+        let currentRoomName = null;
+        // Хранилище сообщений: { contactId: [ {text, from, timestamp} ] }
+        let allMessages = JSON.parse(localStorage.getItem('capytalk_messages') || '{}');
+
+        // Сохранение контактов
+        function saveContacts() {
+            localStorage.setItem('capytalk_contacts', JSON.stringify(contacts));
+        }
+        function saveMessages() {
+            localStorage.setItem('capytalk_messages', JSON.stringify(allMessages));
+        }
+        function saveActiveContact() {
+            if (activeContactId) {
+                localStorage.setItem('capytalk_active_contact', activeContactId);
+            } else {
+                localStorage.removeItem('capytalk_active_contact');
+            }
+        }
+
+        // Переключение вкладок
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                views.forEach(v => v.classList.remove('active'));
+                document.getElementById(`${tab.dataset.view}-view`).classList.add('active');
+            });
+        });
+
+        // Рендер списка контактов
+        function renderContacts() {
+            if (!contactsContainer) return;
+            if (contacts.length === 0) {
+                contactsContainer.innerHTML = `<div class="empty-state"><i class="fa-solid fa-users-slash"></i><p>Пока нет друзей-капибар.<br>Добавь их ID ниже!</p></div>`;
+                return;
+            }
+            contactsContainer.innerHTML = contacts.map(contact => {
+                const lastMsg = allMessages[contact] && allMessages[contact].length > 0 
+                    ? allMessages[contact][allMessages[contact].length-1].text.substring(0,20) 
+                    : 'Нет сообщений';
+                return `
+                    <div class="contact-item" data-id="${contact}">
+                        <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                        <div style="flex:1">
+                            <strong>${contact}</strong>
+                            <div style="font-size:0.8rem; color:#a98467;">${lastMsg}</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="color:#c5a48a;"></i>
+                    </div>
+                `;
+            }).join('');
+
+            // Добавляем обработчики клика для перехода в чат
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const id = item.dataset.id;
+                    openChat(id);
+                    // Переключаемся на вкладку чата
+                    document.querySelector('.tab[data-view="chat"]').click();
+                });
+            });
+        }
+
+        // Подключение к P2P комнате (Bugout)
+        function connectToRoom(contactId) {
+            // Отключаем предыдущее соединение
+            if (bugoutInstance) {
+                try { bugoutInstance.close(); } catch(e) {}
+                bugoutInstance = null;
+            }
+
+            // Создаем имя комнаты на основе двух ID (алфавитная сортировка для консистентности)
+            const roomName = [MY_ID, contactId].sort().join('-capy-');
+            currentRoomName = roomName;
+            
+            console.log(`Подключаемся к комнате: ${roomName}`);
+            
+            // Инициализация Bugout (используем публичные трекеры WebTorrent для поиска пиров)
+            bugoutInstance = new Bugout(roomName, {
+                announce: [
+                    "wss://tracker.openwebtorrent.com",
+                    "wss://tracker.btorrent.xyz"
+                ]
+            });
+
+            bugoutInstance.on('message', (address, message) => {
+                // Расшифровываем сообщение
+                try {
+                    const data = JSON.parse(message);
+                    if (data.type === 'message' && data.from && data.text) {
+                        // Принимаем только сообщения от нашего контакта
+                        if (data.from === contactId || data.from === MY_ID) {
+                            const msgFrom = data.from === MY_ID ? 'me' : contactId;
+                            addMessageToHistory(contactId, data.text, msgFrom);
+                            if (activeContactId === contactId) {
+                                renderMessages(contactId);
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.warn("Не удалось разобрать сообщение", e);
+                }
+            });
+
+            bugoutInstance.on('seen', (address) => {
+                console.log(`Пир найден: ${address}`);
+                // Когда появляется соединение, можно обновить UI
+            });
+        }
+
+        // Отправка сообщения
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !bugoutInstance || !activeContactId) return;
+
+            const msgData = JSON.stringify({
+                type: 'message',
+                from: MY_ID,
+                text: text,
+                timestamp: Date.now()
+            });
+
+            // Добавляем себе в историю
+            addMessageToHistory(activeContactId, text, 'me');
+            renderMessages(activeContactId);
+            
+            // Отправляем всем пирам в комнате (фактически другу)
+            bugoutInstance.send(msgData);
+            
+            messageInput.value = '';
+        }
+
+        // Управление историей
+        function addMessageToHistory(contactId, text, from) {
+            if (!allMessages[contactId]) allMessages[contactId] = [];
+            allMessages[contactId].push({ text, from, timestamp: Date.now() });
+            saveMessages();
+            // Обновим список контактов (для последнего сообщения)
+            renderContacts();
+        }
+
+        function renderMessages(contactId) {
+            if (!messagesContainer) return;
+            const msgs = allMessages[contactId] || [];
+            if (msgs.length === 0) {
+                messagesContainer.innerHTML = `<div class="empty-state"><i class="fa-solid fa-mug-hot"></i><p>Начните разговор<br>с ${contactId}</p></div>`;
+                return;
+            }
+            messagesContainer.innerHTML = msgs.map(msg => {
+                const isMe = msg.from === 'me';
+                const senderName = isMe ? 'Я' : contactId;
+                return `
+                    <div class="msg-bubble ${isMe ? 'msg-sent' : 'msg-received'}">
+                        <div class="msg-info">${senderName}</div>
+                        ${escapeHtml(msg.text)}
+                    </div>
+                `;
+            }).join('');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Открытие чата с контактом
+        function openChat(contactId) {
+            activeContactId = contactId;
+            saveActiveContact();
+            
+            // Включаем поле ввода
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            
+            renderMessages(contactId);
+            connectToRoom(contactId);
+            
+            // Подсветка в контактах не обязательна, можно добавить
+        }
+
+        // Добавление нового контакта
+        function addContact() {
+            const newId = newContactIdInput.value.trim();
+            if (!newId) return;
+            if (newId === MY_ID) {
+                alert("Нельзя добавить самого себя, капибара-друг!");
+                return;
+            }
+            if (contacts.includes(newId)) {
+                alert("Этот друг уже в твоей стае!");
+                newContactIdInput.value = '';
+                return;
+            }
+            contacts.push(newId);
+            saveContacts();
+            renderContacts();
+            newContactIdInput.value = '';
+        }
+
+        // Обработчики событий
+        addContactBtn.addEventListener('click', addContact);
+        newContactIdInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addContact();
+        });
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Инициализация при загрузке
+        function init() {
+            renderContacts();
+            
+            // Если был активный чат, открываем его
+            if (activeContactId && contacts.includes(activeContactId)) {
+                openChat(activeContactId);
+            } else if (activeContactId && !contacts.includes(activeContactId)) {
+                // Контакт удален, сбрасываем
+                activeContactId = null;
+                saveActiveContact();
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+                messagesContainer.innerHTML = `<div class="empty-state"><i class="fa-solid fa-mug-hot"></i><p>Выбери контакт,<br>чтобы начать болтать</p></div>`;
+            } else {
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+            }
+            
+            // Отображаем наш ID где-нибудь для копирования (в консоли или алерт при первом заходе)
+            console.log(`%c🐾 CapyTalk готов! Твой ID: ${MY_ID} %c(Поделись им с другом)`, 'font-size:1.2rem;', '');
+            
+            // Маленькая подсказка в интерфейсе
+            const header = document.querySelector('.app-header');
+            if (header) {
+                header.title = `Твой ID: ${MY_ID} (нажми, чтобы скопировать)`;
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => {
+                    navigator.clipboard.writeText(MY_ID).then(() => {
+                        alert(`Твой ID ${MY_ID} скопирован! Отправь другу.`);
+                    }).catch(() => {
+                        prompt("Твой ID (скопируй вручную):", MY_ID);
+                    });
+                });
+            }
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapiTalk — Капиталк</title>
+    <style>
+        :root {
+            --capybara-brown: #8B6914;
+            --capybara-light: #D4A853;
+            --capybara-bg: #FFF8EC;
+            --capybara-accent: #F5DEB3;
+            --capybara-dark: #5C4033;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFF8EC 0%, #FFE4B5 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .messenger-container {
+            width: 420px;
+            height: 700px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(139, 105, 20, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 3px solid #D4A853;
+        }
+
+        /* Хедер */
+        .header {
+            background: linear-gradient(135deg, #8B6914, #A0792A);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: #FFE4B5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .header-info h1 {
+            font-size: 1.3em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-info span {
+            font-size: 0.8em;
+            opacity: 0.85;
+            font-style: italic;
+        }
+
+        /* Область чата */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #FFF8EC;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+
+        /* Сообщения */
+        .message {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95em;
+            line-height: 1.4;
+            word-wrap: break-word;
+            animation: slideIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #D4A853;
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: white;
+            color: #5C4033;
+            border: 1.5px solid #E8D5A3;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message .sender {
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-bottom: 4px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .message .time {
+            font-size: 0.68em;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message .capybara-emoji {
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+
+        /* Системные сообщения */
+        .system-message {
+            align-self: center;
+            background: #F5DEB3;
+            color: #8B6914;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* Поле ввода */
+        .input-area {
+            padding: 16px 20px;
+            background: white;
+            border-top: 2px solid #F5DEB3;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #E8D5A3;
+            border-radius: 28px;
+            font-size: 0.95em;
+            outline: none;
+            transition: all 0.3s;
+            background: #FFFDF7;
+            color: #5C4033;
+        }
+
+        .input-area input:focus {
+            border-color: #D4A853;
+            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.15);
+        }
+
+        .input-area input::placeholder {
+            color: #C4A35A;
+            font-style: italic;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            background: #8B6914;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: #A0792A;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(139, 105, 20, 0.3);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Никнейм-бар */
+        .nickname-bar {
+            background: #F5DEB3;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: #8B6914;
+        }
+
+        .nickname-bar input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1.5px solid #D4A853;
+            border-radius: 16px;
+            font-size: 0.85em;
+            outline: none;
+            background: white;
+            color: #5C4033;
+        }
+
+        .nickname-bar .capybara-icon {
+            font-size: 1.4em;
+        }
+
+        .online-badge {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Скроллбар */
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #D4A853;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="messenger-container">
+        <!-- Хедер -->
+        <div class="header">
+            <div class="logo">🦫</div>
+            <div class="header-info">
+                <h1>CapiTalk</h1>
+                <span>Капибара Инк. © 2026</span>
+            </div>
+        </div>
+
+        <!-- Никнейм -->
+        <div class="nickname-bar">
+            <span class="capybara-icon">🦫</span>
+            <input type="text" id="nicknameInput" placeholder="Твой никнейм..." value="Капибар" maxlength="20">
+            <span class="online-badge" title="Онлайн"></span>
+        </div>
+
+        <!-- Чат -->
+        <div class="chat-area" id="chatArea">
+            <div class="system-message">
+                🦫 Добро пожаловать в <strong>Капиталк</strong>! Общайся как настоящая капибара.
+            </div>
+        </div>
+
+        <!-- Поле ввода -->
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Напиши что-нибудь по-капибарски..." maxlength="500">
+            <button class="send-btn" id="sendBtn">▶</button>
+        </div>
+    </div>
+
+    <script>
+        // ============ CapiTalk Engine ============
+
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const nicknameInput = document.getElementById('nicknameInput');
+
+        // Используем Broadcast Channel API для общения между вкладками
+        const channel = new BroadcastChannel('capitalk-chat');
+
+        let nickname = localStorage.getItem('capitalk_nickname') || 'Капибар';
+        nicknameInput.value = nickname;
+
+        // Сохраняем никнейм
+        nicknameInput.addEventListener('input', () => {
+            nickname = nicknameInput.value.trim() || 'Капибар';
+            localStorage.setItem('capitalk_nickname', nickname);
+        });
+
+        // Функция получения времени
+        function getTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Функция добавления сообщения в чат
+        function addMessage(text, sender, isSent) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isSent ? 'sent' : 'received');
+
+            const senderSpan = document.createElement('div');
+            senderSpan.classList.add('sender');
+            senderSpan.textContent = sender + ' 🦫';
+
+            const textNode = document.createTextNode(text);
+
+            const timeSpan = document.createElement('div');
+            timeSpan.classList.add('time');
+            timeSpan.textContent = getTime();
+
+            messageDiv.appendChild(senderSpan);
+            messageDiv.appendChild(textNode);
+            messageDiv.appendChild(timeSpan);
+
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Функция добавления системного сообщения
+        function addSystemMessage(text) {
+            const sysDiv = document.createElement('div');
+            sysDiv.classList.add('system-message');
+            sysDiv.textContent = text;
+            chatArea.appendChild(sysDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Отправка сообщения
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const currentNickname = nicknameInput.value.trim() || 'Капибар';
+
+            // Отправляем через канал
+            channel.postMessage({
+                type: 'message',
+                text: text,
+                sender: currentNickname,
+                time: getTime()
+            });
+
+            // Добавляем своё сообщение
+            addMessage(text, currentNickname, true);
+
+            messageInput.value = '';
+            messageInput.focus();
+        }
+
+        // Обработчики отправки
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Приём сообщений из канала
+        channel.onmessage = (event) => {
+            const data = event.data;
+
+            if (data.type === 'message') {
+                const currentNickname = nicknameInput.value.trim() || 'Капибар';
+                // Не показываем свои же сообщения повторно
+                if (data.sender !== currentNickname) {
+                    addMessage(data.text, data.sender, false);
+                }
+            } else if (data.type === 'join') {
+                addSystemMessage(`🦫 ${data.sender} присоединился к Капиталку!`);
+            }
+        };
+
+        // Уведомление о подключении
+        channel.postMessage({
+            type: 'join',
+            sender: nickname
+        });
+
+        // Уведомление о своём входе
+        setTimeout(() => {
+            addSystemMessage(`🦫 Ты в чате как «${nickname}». Капитал начинается здесь!`);
+        }, 500);
+
+        // Фокус на поле ввода
+        messageInput.focus();
+
+        console.log('🦫 CapiTalk v1.0 — Капибара Инк. | Капитал + Капибара = ❤️');
+    </script>
+
+</body>
+</html>

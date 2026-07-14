@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MESSENGER X — Игры и чат</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔥 MESSENGER X</title>
   <style>
     * {
       margin: 0;
@@ -18,12 +18,12 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 12px;
+      padding: 10px;
     }
 
     .app {
       width: 100%;
-      max-width: 450px;
+      max-width: 420px;
       height: 780px;
       background: #0D1117;
       border-radius: 28px;
@@ -50,20 +50,18 @@
       font-size: 18px;
       font-weight: 700;
     }
-
-    .logo span {
-      color: #2EA043;
-    }
+    .logo span { color: #2EA043; }
 
     .header-actions {
+      display: flex;
+      gap: 12px;
       color: #8B949E;
       font-size: 18px;
-      display: flex;
-      gap: 14px;
       cursor: pointer;
     }
+    .header-actions span:hover { color: #E6EDF3; }
 
-    /* НАВИГАЦИЯ (вкладки) */
+    /* ВКЛАДКИ */
     .tabs {
       display: flex;
       background: #0D1117;
@@ -73,26 +71,22 @@
 
     .tab {
       flex: 1;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
       color: #8B949E;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: 0.2s;
       border-bottom: 2px solid transparent;
     }
-
-    .tab:hover {
-      color: #E6EDF3;
-    }
-
+    .tab:hover { color: #E6EDF3; }
     .tab.active {
       color: #2EA043;
       border-bottom-color: #2EA043;
     }
 
-    /* КОНТЕНТ ВКЛАДОК */
+    /* КОНТЕНТ */
     .tab-content {
       flex: 1;
       overflow: hidden;
@@ -103,30 +97,48 @@
       display: none;
       height: 100%;
       flex-direction: column;
-      padding: 12px;
       overflow-y: auto;
     }
+    .tab-pane.active { display: flex; }
 
-    .tab-pane.active {
+    .tab-pane::-webkit-scrollbar { width: 4px; }
+    .tab-pane::-webkit-scrollbar-thumb { background: #1F2937; border-radius: 4px; }
+
+    /* ЧАТ */
+    .chat-header {
+      padding: 10px 16px;
+      background: #0D1117;
+      border-bottom: 1px solid #1F2937;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
     }
 
-    /* === ЧАТ === */
+    .chat-back {
+      color: #8B949E;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .chat-back:hover { color: #E6EDF3; }
+
+    .chat-clear {
+      background: #DA3633;
+      border: none;
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
     .chat-messages {
       flex: 1;
       overflow-y: auto;
+      padding: 12px 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 4px 0;
-    }
-
-    .chat-messages::-webkit-scrollbar {
-      width: 4px;
-    }
-    .chat-messages::-webkit-scrollbar-thumb {
-      background: #1F2937;
-      border-radius: 4px;
     }
 
     .msg {
@@ -135,40 +147,46 @@
       border-radius: 14px;
       font-size: 14px;
       line-height: 1.4;
+      word-break: break-word;
     }
-
     .msg.friend {
       background: #1F2937;
       color: #E6EDF3;
       align-self: flex-start;
       border-bottom-left-radius: 4px;
     }
-
     .msg.me {
-      background: #238636;
-      color: #E6EDF3;
+      background: #2EA043;
+      color: #fff;
       align-self: flex-end;
       border-bottom-right-radius: 4px;
     }
+    .msg .time {
+      font-size: 10px;
+      color: #8B949E;
+      margin-top: 4px;
+      display: block;
+    }
+    .msg.me .time { color: rgba(255,255,255,0.6); }
 
     .chat-input {
       display: flex;
       gap: 8px;
-      padding: 8px 0;
+      padding: 10px 16px;
+      background: #161B22;
       flex-shrink: 0;
     }
-
     .chat-input input {
       flex: 1;
-      background: #161B22;
-      border: none;
+      background: #0D1117;
+      border: 1px solid #1F2937;
       border-radius: 20px;
       padding: 10px 16px;
       color: #E6EDF3;
       font-size: 14px;
       outline: none;
     }
-
+    .chat-input input:focus { border-color: #2EA043; }
     .chat-input button {
       background: #2EA043;
       border: none;
@@ -179,13 +197,131 @@
       font-size: 18px;
       cursor: pointer;
     }
+    .chat-input button:hover { background: #3FB950; }
 
-    /* === ИГРЫ (МАГАЗИН) === */
+    /* КОНТАКТЫ */
+    .contacts-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .contact-item {
+      background: #161B22;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      border: 1px solid #1F2937;
+      transition: 0.2s;
+    }
+    .contact-item:hover { border-color: #2EA043; }
+
+    .contact-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #1F2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #E6EDF3;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .contact-avatar .dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #161B22;
+    }
+    .contact-avatar .dot.online { background: #3FB950; }
+    .contact-avatar .dot.offline { background: #DA3633; }
+
+    .contact-info { flex: 1; }
+    .contact-name { font-weight: 600; color: #E6EDF3; }
+    .contact-status { font-size: 12px; color: #8B949E; }
+
+    .contact-delete {
+      color: #8B949E;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .contact-delete:hover {
+      background: #DA3633;
+      color: #fff;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #8B949E;
+      gap: 12px;
+      text-align: center;
+      padding: 20px;
+    }
+    .empty-state .icon { font-size: 56px; }
+    .empty-state .title { font-size: 18px; font-weight: 600; color: #E6EDF3; }
+    .empty-state .sub { font-size: 14px; }
+    .empty-state .id-box {
+      background: #161B22;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .empty-state .id-box strong { color: #2EA043; }
+
+    .add-contact-row {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #161B22;
+      border-top: 1px solid #1F2937;
+      flex-shrink: 0;
+    }
+    .add-contact-row input {
+      flex: 1;
+      background: #0D1117;
+      border: 1px solid #1F2937;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #E6EDF3;
+      font-size: 14px;
+      outline: none;
+    }
+    .add-contact-row input:focus { border-color: #2EA043; }
+    .add-contact-row button {
+      background: #2EA043;
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .add-contact-row button:hover { background: #3FB950; }
+
+    /* ИГРЫ */
     .games-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      padding: 4px 0;
+      padding: 12px 16px;
     }
 
     .game-card {
@@ -194,30 +330,13 @@
       padding: 14px;
       text-align: center;
       cursor: pointer;
+      border: 1px solid #1F2937;
       transition: 0.2s;
-      border: 1px solid transparent;
     }
-
-    .game-card:hover {
-      border-color: #2EA043;
-      transform: scale(1.02);
-    }
-
-    .game-card .icon {
-      font-size: 32px;
-      margin-bottom: 6px;
-    }
-
-    .game-card .name {
-      color: #E6EDF3;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .game-card .author {
-      color: #8B949E;
-      font-size: 11px;
-    }
+    .game-card:hover { border-color: #2EA043; transform: scale(1.02); }
+    .game-card .icon { font-size: 32px; }
+    .game-card .name { color: #E6EDF3; font-size: 13px; font-weight: 600; margin-top: 4px; }
+    .game-card .desc { color: #8B949E; font-size: 11px; }
 
     .add-game-btn {
       background: #161B22;
@@ -226,26 +345,23 @@
       padding: 20px;
       text-align: center;
       color: #2EA043;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: 0.2s;
       grid-column: 1 / -1;
     }
+    .add-game-btn:hover { background: #1F2937; }
 
-    .add-game-btn:hover {
-      background: #1F2937;
-    }
-
-    /* === КОНСОЛЬ РАЗРАБОТЧИКА === */
-    .console-editor {
+    /* КОНСОЛЬ */
+    .console-area {
+      padding: 12px 16px;
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-
-    .console-editor textarea {
+    .console-area textarea {
       flex: 1;
       background: #0D1117;
       border: 1px solid #1F2937;
@@ -256,18 +372,15 @@
       font-size: 13px;
       resize: none;
       outline: none;
-      min-height: 200px;
+      min-height: 150px;
     }
-
-    .console-editor textarea::placeholder {
-      color: #8B949E;
-    }
+    .console-area textarea:focus { border-color: #2EA043; }
+    .console-area textarea::placeholder { color: #8B949E; }
 
     .console-actions {
       display: flex;
       gap: 10px;
     }
-
     .console-actions button {
       flex: 1;
       padding: 10px;
@@ -277,39 +390,25 @@
       cursor: pointer;
       transition: 0.2s;
     }
-
-    .btn-run {
-      background: #2EA043;
-      color: #fff;
-    }
-
-    .btn-run:hover {
-      background: #3FB950;
-    }
-
-    .btn-publish {
-      background: #1F6FEB;
-      color: #fff;
-    }
-
-    .btn-publish:hover {
-      background: #388BFD;
-    }
+    .btn-run { background: #2EA043; color: #fff; }
+    .btn-run:hover { background: #3FB950; }
+    .btn-publish { background: #1F6FEB; color: #fff; }
+    .btn-publish:hover { background: #388BFD; }
 
     .console-output {
       background: #0D1117;
       border: 1px solid #1F2937;
       border-radius: 12px;
-      padding: 10px;
+      padding: 10px 14px;
       color: #8B949E;
       font-size: 13px;
-      min-height: 60px;
-      max-height: 120px;
+      min-height: 50px;
+      max-height: 100px;
       overflow-y: auto;
       font-family: 'Consolas', monospace;
     }
 
-    /* ИГРОВОЙ ПЛЕЕР (поверх всего) */
+    /* ПЛЕЕР ИГР (поверх всего) */
     .game-player {
       display: none;
       position: absolute;
@@ -320,302 +419,540 @@
       background: #0D1117;
       z-index: 100;
       flex-direction: column;
-      padding: 16px;
     }
-
-    .game-player.active {
-      display: flex;
-    }
+    .game-player.active { display: flex; }
 
     .game-player .close-btn {
-      align-self: flex-end;
       background: #DA3633;
       border: none;
       color: #fff;
-      padding: 6px 16px;
+      padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
-      font-size: 13px;
-      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      align-self: flex-end;
+      margin: 12px 16px;
     }
+    .game-player .close-btn:hover { background: #F85149; }
 
     .game-player .game-frame {
       flex: 1;
+      margin: 0 16px 16px;
       background: #0D1117;
       border: 1px solid #1F2937;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #8B949E;
-      font-size: 16px;
+      border-radius: 16px;
       overflow: hidden;
+      position: relative;
     }
-
     .game-player .game-frame iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
+
+    /* ФОРМА СОЗДАНИЯ ИГРЫ */
+    .game-form {
+      background: #161B22;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 0 16px 12px;
+      border: 1px solid #1F2937;
+    }
+    .game-form input,
+    .game-form textarea {
+      width: 100%;
+      background: #0D1117;
+      border: 1px solid #1F2937;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #E6EDF3;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 8px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .game-form input:focus,
+    .game-form textarea:focus { border-color: #2EA043; }
+    .game-form textarea { resize: vertical; min-height: 60px; }
+
+    .game-form .form-row {
+      display: flex;
+      gap: 8px;
+    }
+    .game-form .form-row input { flex: 1; }
+
+    .game-form .form-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .game-form .form-actions button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-create { background: #2EA043; color: #fff; }
+    .btn-create:hover { background: #3FB950; }
+    .btn-cancel { background: #1F2937; color: #8B949E; }
+    .btn-cancel:hover { background: #DA3633; color: #fff; }
+
+    /* КНОПКИ УПРАВЛЕНИЯ ИГРОЙ */
+    .game-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      justify-content: center;
+    }
+    .game-actions button {
+      padding: 4px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .game-actions .edit { background: #1F6FEB; color: #fff; }
+    .game-actions .edit:hover { background: #388BFD; }
+    .game-actions .delete { background: #DA3633; color: #fff; }
+    .game-actions .delete:hover { background: #F85149; }
   </style>
 </head>
 <body>
 
-<div class="app">
+<div class="app" id="app">
   <!-- ШАПКА -->
   <div class="header">
     <div class="logo">MESSENGER <span>X</span></div>
     <div class="header-actions">
-      <span>🔔</span>
-      <span>⚙️</span>
+      <span onclick="copyMyId()" title="Мой ID">📋</span>
     </div>
   </div>
 
   <!-- ВКЛАДКИ -->
   <div class="tabs">
-    <div class="tab active" data-tab="chat" onclick="switchTab('chat')">💬 Чат</div>
+    <div class="tab active" data-tab="contacts" onclick="switchTab('contacts')">👥 Контакты</div>
     <div class="tab" data-tab="games" onclick="switchTab('games')">🎮 Игры</div>
     <div class="tab" data-tab="console" onclick="switchTab('console')">🛠️ Консоль</div>
   </div>
 
   <!-- КОНТЕНТ -->
   <div class="tab-content">
-    
-    <!-- ВКЛАДКА ЧАТ -->
-    <div class="tab-pane active" id="tab-chat">
-      <div class="chat-messages" id="chatMessages">
-        <div class="msg friend">Привет! Зацени новый мессенджер! 🔥</div>
-        <div class="msg me">Ого! Тут можно игры создавать?</div>
-        <div class="msg friend">Да! Перейди во вкладку "Игры" 😎</div>
-      </div>
-      <div class="chat-input">
-        <input id="chatInput" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendChatMessage()">
-        <button onclick="sendChatMessage()">➤</button>
+
+    <!-- ВКЛАДКА: КОНТАКТЫ -->
+    <div class="tab-pane active" id="tab-contacts">
+      <div class="contacts-list" id="contactsList"></div>
+      <div class="add-contact-row">
+        <input id="addFriendInput" placeholder="Введите ID друга..." onkeydown="if(event.key==='Enter') addContact()">
+        <button onclick="addContact()">➕ Добавить</button>
       </div>
     </div>
 
-    <!-- ВКЛАДКА ИГРЫ -->
+    <!-- ВКЛАДКА: ИГРЫ -->
     <div class="tab-pane" id="tab-games">
-      <div class="games-grid" id="gamesGrid">
-        <!-- Игры будут добавляться сюда -->
-        <div class="game-card" onclick="playGame('Кликер', 'Кликни 100 раз!')">
-          <div class="icon">🖱️</div>
-          <div class="name">Кликер</div>
-          <div class="author">от System</div>
-        </div>
-        <div class="game-card" onclick="playGame('Угадай число', 'Угадай число от 1 до 10')">
-          <div class="icon">🎯</div>
-          <div class="name">Угадай число</div>
-          <div class="author">от System</div>
-        </div>
-        <div class="game-card" onclick="playGame('Викторина', 'Ответь на 5 вопросов')">
-          <div class="icon">🧠</div>
-          <div class="name">Викторина</div>
-          <div class="author">от System</div>
-        </div>
-        <div class="add-game-btn" onclick="switchTab('console')">➕ Добавить свою игру</div>
+      <div style="padding: 8px 16px 4px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button onclick="showCreateGameForm()" style="background:#2EA043;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">➕ Создать игру</button>
+        <button onclick="if(confirm('Удалить все игры?')){localStorage.removeItem('devGames');renderGames();}" style="background:#DA3633;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">🗑️ Удалить всё</button>
       </div>
+      <div id="gameFormContainer"></div>
+      <div class="games-grid" id="gamesGrid"></div>
     </div>
 
-    <!-- ВКЛАДКА КОНСОЛЬ -->
+    <!-- ВКЛАДКА: КОНСОЛЬ -->
     <div class="tab-pane" id="tab-console">
-      <div class="console-editor">
-        <textarea id="codeEditor" placeholder="// Напиши свою игру на JavaScript&#10;// Например:&#10;function startGame() {&#10;  alert('Привет, игрок!');&#10;}">// Напиши свою игру здесь
+      <div class="console-area">
+        <textarea id="codeEditor" placeholder="// Напиши код игры на JavaScript...&#10;// Обязательно добавь функцию startGame()">// Пример игры
 function startGame() {
   alert('🎮 Привет! Это твоя игра!');
 }</textarea>
         <div class="console-actions">
-          <button class="btn-run" onclick="runGame()">▶️ Запустить</button>
-          <button class="btn-publish" onclick="publishGame()">📤 Опубликовать</button>
+          <button class="btn-run" onclick="runCode()">▶️ Запустить</button>
+          <button class="btn-publish" onclick="publishCode()">📤 Опубликовать</button>
         </div>
-        <div class="console-output" id="consoleOutput">✅ Готов к работе. Напиши код и нажми "Запустить"</div>
+        <div class="console-output" id="consoleOutput">✅ Готов к работе</div>
       </div>
     </div>
   </div>
 
-  <!-- ИГРОВОЙ ПЛЕЕР -->
+  <!-- ПЛЕЕР ИГР -->
   <div class="game-player" id="gamePlayer">
-    <button class="close-btn" onclick="closeGame()">✕ Закрыть игру</button>
+    <button class="close-btn" onclick="closeGame()">✕ Закрыть</button>
     <div class="game-frame" id="gameFrame">
-      <span id="gamePlaceholder">🎮 Загрузка игры...</span>
+      <div id="gamePlaceholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:#8B949E;font-size:16px;flex-direction:column;gap:12px;">
+        <span style="font-size:48px;">🎮</span>
+        <span>Выбери игру из списка</span>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  // ============================================================
+  //  🔥 MESSENGER X — ПОЛНАЯ ВЕРСИЯ
+  //  Контакты, чат, игры, студия — всё в одном файле!
+  // ============================================================
+
+  // === ID ПОЛЬЗОВАТЕЛЯ ===
+  let myId = localStorage.getItem('messengerMyId');
+  if (!myId) {
+    myId = 'USER_' + Math.random().toString(36).substring(2, 7).toUpperCase();
+    localStorage.setItem('messengerMyId', myId);
+  }
+
+  // === КОНТАКТЫ ===
+  let contacts = JSON.parse(localStorage.getItem('messengerContacts') || '[]');
+  let currentChat = localStorage.getItem('messengerCurrentChat') || null;
+  let messages = JSON.parse(localStorage.getItem('messengerMessages') || '{}');
+
+  // === ИГРЫ ===
+  let games = JSON.parse(localStorage.getItem('devGames') || '[]');
+
   // === ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ===
-  function switchTab(tabName) {
+  function switchTab(name) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    
-    document.getElementById('tab-' + tabName).classList.add('active');
-    document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelector(`.tab[data-tab="${name}"]`).classList.add('active');
+    if (name === 'contacts') renderContacts();
+    if (name === 'games') renderGames();
   }
 
-  // === ОТПРАВКА СООБЩЕНИЙ ===
-  function sendChatMessage() {
+  // ============================================================
+  //  👥 КОНТАКТЫ
+  // ============================================================
+
+  function renderContacts() {
+    const list = document.getElementById('contactsList');
+    if (!list) return;
+
+    // Если нет контактов
+    if (contacts.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">👥</div>
+          <div class="title">Нет контактов</div>
+          <div class="sub">Добавь друга по ID</div>
+          <div class="id-box">Ваш ID: <strong>${myId}</strong></div>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    contacts.forEach(id => {
+      const isOnline = Math.random() > 0.4;
+      html += `
+        <div class="contact-item" onclick="openChat('${id}')">
+          <div class="contact-avatar">
+            ${id.charAt(0)}
+            <span class="dot ${isOnline ? 'online' : 'offline'}"></span>
+          </div>
+          <div class="contact-info">
+            <div class="contact-name">${id}</div>
+            <div class="contact-status">${isOnline ? '🟢 онлайн' : '🔴 офлайн'}</div>
+          </div>
+          <span class="contact-delete" onclick="event.stopPropagation();deleteContact('${id}')">✕</span>
+        </div>
+      `;
+    });
+
+    list.innerHTML = html;
+  }
+
+  function addContact() {
+    const input = document.getElementById('addFriendInput');
+    const id = input.value.trim().toUpperCase();
+    if (!id) { alert('❌ Введите ID друга'); return; }
+    if (id === myId) { alert('❌ Это ваш ID!'); return; }
+    if (contacts.includes(id)) { alert('❌ Уже добавлен'); return; }
+    contacts.push(id);
+    localStorage.setItem('messengerContacts', JSON.stringify(contacts));
+    input.value = '';
+    renderContacts();
+  }
+
+  function deleteContact(id) {
+    if (!confirm(`Удалить контакт ${id}?`)) return;
+    contacts = contacts.filter(c => c !== id);
+    localStorage.setItem('messengerContacts', JSON.stringify(contacts));
+    if (currentChat === id) {
+      currentChat = null;
+      localStorage.removeItem('messengerCurrentChat');
+    }
+    renderContacts();
+  }
+
+  function copyMyId() {
+    navigator.clipboard?.writeText(myId)?.then(() => {
+      alert('✅ ID скопирован:\n' + myId);
+    })?.catch(() => {
+      prompt('Ваш ID:', myId);
+    });
+  }
+
+  // ============================================================
+  //  💬 ЧАТ
+  // ============================================================
+
+  function openChat(id) {
+    currentChat = id;
+    localStorage.setItem('messengerCurrentChat', id);
+    renderChat();
+  }
+
+  function renderChat() {
+    const list = document.getElementById('contactsList');
+    if (!list) return;
+
+    const msgs = messages[currentChat] || [];
+
+    let html = `
+      <div style="display:flex;flex-direction:column;height:100%;">
+        <div class="chat-header">
+          <span class="chat-back" onclick="closeChat()">← Назад к контактам</span>
+          <span style="font-weight:600;color:#E6EDF3;">${currentChat}</span>
+          <button class="chat-clear" onclick="clearChat()">🗑️ Очистить</button>
+        </div>
+        <div class="chat-messages" id="chatMessagesArea">
+    `;
+
+    if (msgs.length === 0) {
+      html += `
+        <div style="text-align:center;color:#8B949E;padding:30px 0;">
+          💬 Нет сообщений<br>
+          <span style="font-size:12px;">Напиши что-нибудь...</span>
+        </div>
+      `;
+    } else {
+      msgs.forEach(msg => {
+        const isMe = msg.from === myId;
+        html += `
+          <div class="msg ${isMe ? 'me' : 'friend'}">
+            ${msg.text}
+            <span class="time">${msg.time || 'Только что'}</span>
+          </div>
+        `;
+      });
+    }
+
+    html += `
+        </div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendMessage()">
+          <button onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    `;
+
+    list.innerHTML = html;
+    const area = document.getElementById('chatMessagesArea');
+    if (area) area.scrollTop = area.scrollHeight;
+  }
+
+  function closeChat() {
+    currentChat = null;
+    localStorage.removeItem('messengerCurrentChat');
+    renderContacts();
+  }
+
+  function sendMessage() {
     const input = document.getElementById('chatInput');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text || !currentChat) return;
 
-    const container = document.getElementById('chatMessages');
-    const msg = document.createElement('div');
-    msg.className = 'msg me';
-    msg.textContent = text;
-    container.appendChild(msg);
-    container.scrollTop = container.scrollHeight;
+    if (!messages[currentChat]) messages[currentChat] = [];
+    messages[currentChat].push({
+      from: myId,
+      text: text,
+      time: new Date().toLocaleTimeString()
+    });
+    localStorage.setItem('messengerMessages', JSON.stringify(messages));
     input.value = '';
-
-    // Имитация ответа друга
-    setTimeout(() => {
-      const replies = ['Круто! 😎', 'Понял!', 'Ого!', '🔥🔥🔥', 'А давай поиграем?'];
-      const reply = document.createElement('div');
-      reply.className = 'msg friend';
-      reply.textContent = replies[Math.floor(Math.random() * replies.length)];
-      container.appendChild(reply);
-      container.scrollTop = container.scrollHeight;
-    }, 800);
+    renderChat();
   }
 
-  // === ЗАПУСК ИГРЫ ИЗ МАГАЗИНА ===
-  function playGame(name, desc) {
+  function clearChat() {
+    if (!confirm('Удалить всю переписку?')) return;
+    delete messages[currentChat];
+    localStorage.setItem('messengerMessages', JSON.stringify(messages));
+    renderChat();
+  }
+
+  // ============================================================
+  //  🎮 ИГРЫ
+  // ============================================================
+
+  function renderGames() {
+    const grid = document.getElementById('gamesGrid');
+    if (!grid) return;
+
+    if (games.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;color:#8B949E;padding:30px 0;">
+          🎮 Нет игр<br>
+          <span style="font-size:12px;">Создай игру через Консоль или кнопку ниже</span>
+        </div>
+        <div class="add-game-btn" onclick="showCreateGameForm()">➕ Добавить свою игру</div>
+      `;
+      return;
+    }
+
+    let html = '';
+    games.forEach((game, index) => {
+      html += `
+        <div class="game-card" onclick="playGame(${index})">
+          <div class="icon">${game.icon || '🎮'}</div>
+          <div class="name">${game.name || 'Без названия'}</div>
+          <div class="desc">${game.description || ''}</div>
+          <div class="game-actions">
+            <button class="edit" onclick="event.stopPropagation();editGame(${index})">✏️</button>
+            <button class="delete" onclick="event.stopPropagation();deleteGame(${index})">🗑️</button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `<div class="add-game-btn" onclick="showCreateGameForm()">➕ Добавить свою игру</div>`;
+    grid.innerHTML = html;
+  }
+
+  function showCreateGameForm() {
+    const container = document.getElementById('gameFormContainer');
+    container.innerHTML = `
+      <div class="game-form">
+        <input id="gameNameInput" placeholder="Название игры..." value="">
+        <input id="gameIconInput" placeholder="Иконка (эмодзи, например 🎮)" value="🎮">
+        <textarea id="gameDescInput" placeholder="Описание игры..."></textarea>
+        <div class="form-actions">
+          <button class="btn-create" onclick="createGame()">✅ Создать</button>
+          <button class="btn-cancel" onclick="document.getElementById('gameFormContainer').innerHTML=''">Отмена</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('gameNameInput')?.focus();
+  }
+
+  function createGame() {
+    const name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
+    const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
+    const description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
+
+    const code = localStorage.getItem('currentGameCode') || 'function startGame() { alert("🎮 Привет!"); }';
+
+    games.push({
+      name: name,
+      icon: icon,
+      description: description,
+      code: code
+    });
+
+    localStorage.setItem('devGames', JSON.stringify(games));
+    document.getElementById('gameFormContainer').innerHTML = '';
+    renderGames();
+  }
+
+  function editGame(index) {
+    const game = games[index];
+    if (!game) return;
+
+    const container = document.getElementById('gameFormContainer');
+    container.innerHTML = `
+      <div class="game-form">
+        <input id="gameNameInput" placeholder="Название игры..." value="${game.name || ''}">
+        <input id="gameIconInput" placeholder="Иконка (эмодзи)" value="${game.icon || '🎮'}">
+        <textarea id="gameDescInput" placeholder="Описание игры...">${game.description || ''}</textarea>
+        <div class="form-actions">
+          <button class="btn-create" onclick="updateGame(${index})">💾 Обновить</button>
+          <button class="btn-cancel" onclick="document.getElementById('gameFormContainer').innerHTML=''">Отмена</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function updateGame(index) {
+    const name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
+    const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
+    const description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
+
+    games[index].name = name;
+    games[index].icon = icon;
+    games[index].description = description;
+
+    localStorage.setItem('devGames', JSON.stringify(games));
+    document.getElementById('gameFormContainer').innerHTML = '';
+    renderGames();
+  }
+
+  function deleteGame(index) {
+    if (!confirm(`Удалить игру "${games[index].name}"?`)) return;
+    games.splice(index, 1);
+    localStorage.setItem('devGames', JSON.stringify(games));
+    renderGames();
+  }
+
+  function playGame(index) {
+    const game = games[index];
+    if (!game) return;
+
     const player = document.getElementById('gamePlayer');
     const frame = document.getElementById('gameFrame');
     const placeholder = document.getElementById('gamePlaceholder');
-    
+
     player.classList.add('active');
-    placeholder.textContent = `🎮 ${name}\n${desc}\n\n(Здесь будет твоя игра!)`;
-    
-    // Если есть сохранённая игра — запускаем её
-    const savedGame = localStorage.getItem('publishedGame');
-    if (savedGame) {
+    placeholder.style.display = 'none';
+
+    // Очищаем фрейм
+    frame.innerHTML = '';
+
+    // Создаём контейнер для игры
+    const container = document.createElement('div');
+    container.style.cssText = `
+      width: 100%;
+      height: 100%;
+      background: #0D1117;
+      padding: 16px;
+      overflow-y: auto;
+      font-family: 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+    `;
+
+    container.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:32px;">${game.icon || '🎮'}</span>
+          <span style="font-size:18px;font-weight:700;color:#E6EDF3;">${game.name}</span>
+        </div>
+      </div>
+      <div style="color:#8B949E;font-size:13px;margin-bottom:12px;">${game.description || 'Нет описания'}</div>
+      <div id="gameContent" style="background:#161B22;border-radius:12px;padding:16px;min-height:150px;border:1px solid #1F2937;color:#E6EDF3;">
+        <span style="color:#8B949E;">⏳ Загрузка игры...</span>
+      </div>
+    `;
+
+    frame.appendChild(container);
+
+    // Запускаем код игры
+    if (game.code) {
       try {
-        const fn = new Function(savedGame);
-        fn();
+        const fn = new Function(game.code + '\n return startGame;');
+        const startGameFn = fn();
+        if (typeof startGameFn === 'function') {
+          startGameFn();
+        } else {
+          document.getElementById('gameContent').innerHTML = `
+            <div style="color:#DA3633;">❌ Ошибка: функция startGame() не найдена</div>
+          `;
+        }
       } catch(e) {
-        placeholder.textContent = '❌ Ошибка в игре: ' + e.message;
+        document.getElementById('gameContent').innerHTML = `
+          <div style="color:#DA3633;">❌ Ошибка: ${e.message}</div>
+        `;
       }
     }
   }
 
-  function closeGame() {
-    document.getElementById('gamePlayer').classList.remove('active');
-  }
-
-  // === КОНСОЛЬ РАЗРАБОТЧИКА ===
-  let publishedGames = JSON.parse(localStorage.getItem('games') || '[]');
-
-  function runGame() {
-    const code = document.getElementById('codeEditor').value;
-    const output = document.getElementById('consoleOutput');
-    
-    try {
-      // Очищаем предыдущие результаты
-      const frame = document.getElementById('gameFrame');
-      const placeholder = document.getElementById('gamePlaceholder');
-      
-      // Создаём функцию из кода
-      const gameFn = new Function(code + '\n return startGame;');
-      const startGame = gameFn();
-      
-      // Запускаем игру в песочнице
-      const originalAlert = window.alert;
-      let logs = [];
-      window.alert = function(msg) {
-        logs.push('🟢 ' + msg);
-        output.innerHTML = logs.join('\n');
-      };
-      
-      startGame();
-      
-      window.alert = originalAlert;
-      output.innerHTML += '\n✅ Игра выполнена!';
-      
-      // Сохраняем игру локально
-      localStorage.setItem('currentGame', code);
-      
-    } catch(e) {
-      output.innerHTML = '❌ Ошибка: ' + e.message;
-    }
-  }
-
-  function publishGame() {
-    const code = document.getElementById('codeEditor').value;
-    const output = document.getElementById('consoleOutput');
-    
-    if (!code.trim()) {
-      output.innerHTML = '❌ Напиши код игры!';
-      return;
-    }
-
-    // Проверяем, что есть функция startGame
-    if (!code.includes('function startGame')) {
-      output.innerHTML = '❌ Добавь функцию startGame() в свой код!';
-      return;
-    }
-
-    // Сохраняем игру
-    const games = JSON.parse(localStorage.getItem('games') || '[]');
-    const gameData = {
-      id: Date.now(),
-      name: 'Новая игра ' + (games.length + 1),
-      author: 'Разработчик',
-      code: code,
-      icon: '🎮'
-    };
-    
-    games.push(gameData);
-    localStorage.setItem('games', JSON.stringify(games));
-    
-    output.innerHTML = '✅ Игра опубликована! Перейди во вкладку "Игры"';
-    loadGames();
-  }
-
-  function loadGames() {
-    const grid = document.getElementById('gamesGrid');
-    const games = JSON.parse(localStorage.getItem('games') || '[]');
-    
-    // Удаляем старые игры (кроме системных)
-    const systemGames = grid.querySelectorAll('.game-card:not(.add-game-btn)');
-    systemGames.forEach(el => el.remove());
-    
-    // Добавляем пользовательские игры
-    games.forEach(game => {
-      const card = document.createElement('div');
-      card.className = 'game-card';
-      card.innerHTML = `
-        <div class="icon">${game.icon || '🎮'}</div>
-        <div class="name">${game.name}</div>
-        <div class="author">от ${game.author}</div>
-      `;
-      card.onclick = () => {
-        // Загружаем игру из сохранённого кода
-        localStorage.setItem('publishedGame', game.code);
-        playGame(game.name, 'Игра от пользователя');
-      };
-      grid.insertBefore(card, grid.querySelector('.add-game-btn'));
-    });
-  }
-
-  // Загружаем игры при старте
-  loadGames();
-
-  // Сохраняем игру при вводе
-  document.getElementById('codeEditor').addEventListener('input', function() {
-    localStorage.setItem('currentGame', this.value);
-  });
-
-  // Восстанавливаем последний код
-  const savedCode = localStorage.getItem('currentGame');
-  if (savedCode) {
-    document.getElementById('codeEditor').value = savedCode;
-  }
-
-  // Автоскролл чата
-  document.addEventListener('DOMContentLoaded', function() {
-    const chat = document.getElementById('chatMessages');
-    chat.scrollTop = chat.scrollHeight;
-  });
-</script>
-</body>
-    </html>
+  function close

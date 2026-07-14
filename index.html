@@ -955,4 +955,91 @@ function startGame() {
     }
   }
 
-  function close
+  function closeGame() {
+    document.getElementById('gamePlayer').classList.remove('active');
+    const frame = document.getElementById('gameFrame');
+    frame.innerHTML = `
+      <div id="gamePlaceholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:#8B949E;font-size:16px;flex-direction:column;gap:12px;">
+        <span style="font-size:48px;">🎮</span>
+        <span>Выбери игру из списка</span>
+      </div>
+    `;
+  }
+
+  // ============================================================
+  //  🛠️ КОНСОЛЬ РАЗРАБОТЧИКА
+  // ============================================================
+
+  function runCode() {
+    const code = document.getElementById('codeEditor').value;
+    const output = document.getElementById('consoleOutput');
+
+    try {
+      const fn = new Function(code + '\n return startGame;');
+      const startGameFn = fn();
+      if (typeof startGameFn === 'function') {
+        startGameFn();
+        output.innerHTML = '✅ Игра выполнена!';
+      } else {
+        output.innerHTML = '❌ Функция startGame() не найдена';
+      }
+    } catch(e) {
+      output.innerHTML = '❌ Ошибка: ' + e.message;
+    }
+  }
+
+  function publishCode() {
+    const code = document.getElementById('codeEditor').value;
+    const output = document.getElementById('consoleOutput');
+
+    if (!code.includes('function startGame')) {
+      output.innerHTML = '❌ Добавь функцию startGame() в код!';
+      return;
+    }
+
+    // Сохраняем код
+    localStorage.setItem('currentGameCode', code);
+
+    // Создаём игру
+    const name = prompt('Название игры:', 'Моя игра');
+    if (!name) return;
+    const icon = prompt('Иконка (эмодзи):', '🎮') || '🎮';
+    const description = prompt('Описание:', 'Игра от пользователя') || 'Игра от пользователя';
+
+    games.push({
+      name: name,
+      icon: icon,
+      description: description,
+      code: code
+    });
+
+    localStorage.setItem('devGames', JSON.stringify(games));
+    output.innerHTML = '✅ Игра опубликована! Перейди во вкладку "Игры"';
+    renderGames();
+  }
+
+  // ============================================================
+  //  ЗАПУСК
+  // ============================================================
+
+  renderContacts();
+  renderGames();
+
+  // Если был открыт чат — восстанавливаем
+  if (currentChat && contacts.includes(currentChat)) {
+    renderChat();
+  }
+
+  console.log('🔥 MESSENGER X загружен!');
+  console.log('📋 Ваш ID:', myId);
+  console.log('👥 Контакты:', contacts);
+  console.log('🎮 Игр:', games.length);
+
+  // Для отладки
+  window.myId = myId;
+  window.contacts = contacts;
+  window.games = games;
+</script>
+
+</body>
+  </html>

@@ -69,6 +69,7 @@
     .tab-pane.active { display: flex; }
     .tab-pane::-webkit-scrollbar { width: 4px; }
     .tab-pane::-webkit-scrollbar-thumb { background: #1F2937; border-radius: 4px; }
+
     .chat-header {
       padding: 10px 16px;
       background: #0D1117;
@@ -411,6 +412,16 @@
     .btn-create:hover { background: #3FB950; }
     .btn-cancel { background: #1F2937; color: #8B949E; }
     .btn-cancel:hover { background: #DA3633; color: #fff; }
+
+    /* Индикатор печатает */
+    #typingIndicator {
+      font-size: 12px;
+      color: #8B949E;
+      padding: 4px 16px 0 16px;
+      min-height: 20px;
+      display: none;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -475,7 +486,7 @@ function startGame() {
 
 <script>
   // ============================================================
-  //  🔥 MESSENGER X — ПОЛНАЯ ВЕРСИЯ (ВСЕ КНОПКИ РАБОТАЮТ)
+  //  🔥 MESSENGER X — СТАТУСЫ: ОНЛАЙН, ОФЛАЙН, ПЕЧАТАЕТ
   // ============================================================
 
   console.log('🚀 Загрузка MESSENGER X...');
@@ -494,10 +505,7 @@ function startGame() {
   let messages = JSON.parse(localStorage.getItem('messengerMessages') || '{}');
   let games = JSON.parse(localStorage.getItem('devGames') || '[]');
 
-  console.log('👥 Контакты:', contacts);
-  console.log('🎮 Игр:', games.length);
-
-  // --- DOM-ссылки ---
+  // --- DOM ---
   const contactsList = document.getElementById('contactsList');
   const gamesGrid = document.getElementById('gamesGrid');
   const gameFormContainer = document.getElementById('gameFormContainer');
@@ -505,36 +513,26 @@ function startGame() {
   const codeEditor = document.getElementById('codeEditor');
 
   // ============================================================
-  //  ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+  //  СОХРАНЕНИЕ ВРЕМЕНИ (ДЛЯ ОНЛАЙН СТАТУСА)
   // ============================================================
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-      const name = this.dataset.tab;
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.getElementById('tab-' + name).classList.add('active');
-      this.classList.add('active');
-      if (name === 'contacts') renderContacts();
-      if (name === 'games') renderGames();
-    });
-  });
+  setInterval(() => {
+    localStorage.setItem('lastSeen_' + myId, String(Date.now()));
+  }, 5000);
 
   // ============================================================
-  //  КОПИРОВАНИЕ ID
+  //  ФУНКЦИЯ ОНЛАЙН СТАТУСА
   // ============================================================
-  document.getElementById('copyIdBtn').addEventListener('click', function() {
-    navigator.clipboard?.writeText(myId)?.then(() => {
-      alert('✅ ID скопирован:\n' + myId);
-    })?.catch(() => {
-      prompt('Ваш ID:', myId);
-    });
-  });
+  function isUserOnline(id) {
+    const lastSeen = localStorage.getItem('lastSeen_' + id);
+    if (!lastSeen) return false;
+    const diff = Date.now() - parseInt(lastSeen);
+    return diff < 10000; // 10 секунд — считается онлайн
+  }
 
   // ============================================================
-  //  КОНТАКТЫ
+  //  РЕНДЕРИНГ КОНТАКТОВ (С ОНЛАЙН/ОФЛАЙН)
   // ============================================================
   function renderContacts() {
-    console.log('🔄 Рендеринг контактов');
     if (!contactsList) return;
 
     if (contacts.length === 0) {
@@ -551,16 +549,18 @@ function startGame() {
 
     let html = '';
     contacts.forEach(id => {
-      const isOnline = Math.random() > 0.4;
+      const online = isUserOnline(id);
+      const statusText = online ? '🟢 онлайн' : '🔴 офлайн';
+
       html += `
         <div class="contact-item" data-contact="${id}">
           <div class="contact-avatar">
             ${id.charAt(0)}
-            <span class="dot ${isOnline ? 'online' : 'offline'}"></span>
+            <span class="dot ${online ? 'online' : 'offline'}"></span>
           </div>
           <div class="contact-info">
             <div class="contact-name">${id}</div>
-            <div class="contact-status">${isOnline ? '🟢 онлайн' : '🔴 офлайн'}</div>
+            <div class="contact-status">${statusText}</div>
           </div>
           <span class="contact-delete" data-contact="${id}">✕</span>
         </div>
@@ -569,7 +569,7 @@ function startGame() {
 
     contactsList.innerHTML = html;
 
-    // Привязываем события (делегирование)
+    // События
     contactsList.querySelectorAll('.contact-item').forEach(item => {
       item.addEventListener('click', function(e) {
         if (e.target.classList.contains('contact-delete')) return;
@@ -582,13 +582,22 @@ function startGame() {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
         const id = this.dataset.contact;
-        deleteContact(id);
+        if (!confirm(`Удалить контакт ${id}?`)) return;
+        contacts = contacts.filter(c => c !== id);
+        localStorage.setItem('messengerContacts', JSON.stringify(contacts));
+        if (currentChat === id) {
+          currentChat = null;
+          localStorage.removeItem('messengerCurrentChat');
+        }
+        renderContacts();
       });
     });
   }
 
+  // ============================================================
+  //  ДОБАВЛЕНИЕ КОНТАКТА
+  // ============================================================
   function addContact() {
-    console.log('➕ addContact вызвана');
     const input = document.getElementById('addFriendInput');
     const id = input.value.trim().toUpperCase();
     if (!id) { alert('❌ Введите ID друга'); return; }
@@ -605,23 +614,23 @@ function startGame() {
     if (e.key === 'Enter') addContact();
   });
 
-  function deleteContact(id) {
-    console.log('🗑️ deleteContact:', id);
-    if (!confirm(`Удалить контакт ${id}?`)) return;
-    contacts = contacts.filter(c => c !== id);
-    localStorage.setItem('messengerContacts', JSON.stringify(contacts));
-    if (currentChat === id) {
-      currentChat = null;
-      localStorage.removeItem('messengerCurrentChat');
-    }
-    renderContacts();
-  }
+  // ============================================================
+  //  КОПИРОВАНИЕ ID
+  // ============================================================
+  document.getElementById('copyIdBtn').addEventListener('click', function() {
+    navigator.clipboard?.writeText(myId)?.then(() => {
+      alert('✅ ID скопирован:\n' + myId);
+    })?.catch(() => {
+      prompt('Ваш ID:', myId);
+    });
+  });
 
   // ============================================================
-  //  ЧАТ
+  //  ЧАТ С "ПЕЧАТАЕТ..."
   // ============================================================
+  let typingTimeout;
+
   function openChat(id) {
-    console.log('💬 openChat:', id);
     currentChat = id;
     localStorage.setItem('messengerCurrentChat', id);
     renderChat();
@@ -657,6 +666,7 @@ function startGame() {
 
     html += `
         </div>
+        <div id="typingIndicator">✍️ <span id="typingName">${currentChat}</span> печатает...</div>
         <div class="chat-input">
           <input id="chatInput" placeholder="Сообщение...">
           <button id="sendMsgBtn">➤</button>
@@ -666,13 +676,14 @@ function startGame() {
 
     contactsList.innerHTML = html;
 
-    // Привязываем события
+    // Назад
     document.getElementById('chatBackBtn').addEventListener('click', function() {
       currentChat = null;
       localStorage.removeItem('messengerCurrentChat');
       renderContacts();
     });
 
+    // Очистить
     document.getElementById('clearChatBtn').addEventListener('click', function() {
       if (!confirm('Удалить всю переписку?')) return;
       delete messages[currentChat];
@@ -680,9 +691,25 @@ function startGame() {
       renderChat();
     });
 
+    // Отправка
     document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
-    document.getElementById('chatInput').addEventListener('keydown', function(e) {
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') sendMessage();
+    });
+
+    // 🟢 "Печатает..."
+    chatInput.addEventListener('input', function() {
+      const indicator = document.getElementById('typingIndicator');
+      if (this.value.length > 0) {
+        indicator.style.display = 'block';
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          indicator.style.display = 'none';
+        }, 2000);
+      } else {
+        indicator.style.display = 'none';
+      }
     });
 
     const area = document.getElementById('chatMessagesArea');
@@ -702,16 +729,34 @@ function startGame() {
     });
     localStorage.setItem('messengerMessages', JSON.stringify(messages));
     input.value = '';
+
+    // Скрываем "печатает..."
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.style.display = 'none';
+
     renderChat();
   }
+
+  // ============================================================
+  //  ВКЛАДКИ
+  // ============================================================
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      const name = this.dataset.tab;
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      this.classList.add('active');
+      if (name === 'contacts') renderContacts();
+      if (name === 'games') renderGames();
+    });
+  });
 
   // ============================================================
   //  ИГРЫ
   // ============================================================
   function renderGames() {
-    console.log('🔄 Рендеринг игр');
     if (!gamesGrid) return;
-
     if (games.length === 0) {
       gamesGrid.innerHTML = `
         <div style="grid-column:1/-1;text-align:center;color:#8B949E;padding:30px 0;">
@@ -738,11 +783,9 @@ function startGame() {
         </div>
       `;
     });
-
     html += `<div class="add-game-btn" id="addGameBtn">➕ Добавить свою игру</div>`;
     gamesGrid.innerHTML = html;
 
-    // События на карточки
     gamesGrid.querySelectorAll('.game-card').forEach(card => {
       const index = parseInt(card.dataset.index);
       card.addEventListener('click', function(e) {
@@ -763,7 +806,10 @@ function startGame() {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
         const index = parseInt(this.dataset.index);
-        deleteGame(index);
+        if (!confirm(`Удалить игру "${games[index].name}"?`)) return;
+        games.splice(index, 1);
+        localStorage.setItem('devGames', JSON.stringify(games));
+        renderGames();
       });
     });
 
@@ -773,8 +819,8 @@ function startGame() {
   function showCreateGameForm() {
     gameFormContainer.innerHTML = `
       <div class="game-form">
-        <input id="gameNameInput" placeholder="Название игры..." value="">
-        <input id="gameIconInput" placeholder="Иконка (эмодзи, например 🎮)" value="🎮">
+        <input id="gameNameInput" placeholder="Название игры...">
+        <input id="gameIconInput" placeholder="Иконка (эмодзи)" value="🎮">
         <textarea id="gameDescInput" placeholder="Описание игры..."></textarea>
         <div class="form-actions">
           <button class="btn-create" id="createGameSubmit">✅ Создать</button>
@@ -782,21 +828,15 @@ function startGame() {
         </div>
       </div>
     `;
-
     document.getElementById('createGameSubmit').addEventListener('click', createGame);
-    document.getElementById('createGameCancel').addEventListener('click', function() {
-      gameFormContainer.innerHTML = '';
-    });
-    document.getElementById('gameNameInput')?.focus();
+    document.getElementById('createGameCancel').addEventListener('click', () => gameFormContainer.innerHTML = '');
   }
 
   function createGame() {
     const name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
     const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
     const description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
-
     const code = localStorage.getItem('currentGameCode') || 'function startGame() { alert("🎮 Привет!"); }';
-
     games.push({ name, icon, description, code });
     localStorage.setItem('devGames', JSON.stringify(games));
     gameFormContainer.innerHTML = '';
@@ -805,74 +845,40 @@ function startGame() {
 
   function editGame(index) {
     const game = games[index];
-    if (!game) return;
-
     gameFormContainer.innerHTML = `
       <div class="game-form">
         <input id="gameNameInput" placeholder="Название игры..." value="${game.name || ''}">
-        <input id="gameIconInput" placeholder="Иконка (эмодзи)" value="${game.icon || '🎮'}">
-        <textarea id="gameDescInput" placeholder="Описание игры...">${game.description || ''}</textarea>
+        <input id="gameIconInput" placeholder="Иконка" value="${game.icon || '🎮'}">
+        <textarea id="gameDescInput" placeholder="Описание...">${game.description || ''}</textarea>
         <div class="form-actions">
           <button class="btn-create" id="updateGameSubmit">💾 Обновить</button>
           <button class="btn-cancel" id="updateGameCancel">Отмена</button>
         </div>
       </div>
     `;
-
     document.getElementById('updateGameSubmit').addEventListener('click', function() {
-      const name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
-      const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
-      const description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
-      games[index].name = name;
-      games[index].icon = icon;
-      games[index].description = description;
+      games[index].name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
+      games[index].icon = document.getElementById('gameIconInput').value.trim() || '🎮';
+      games[index].description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
       localStorage.setItem('devGames', JSON.stringify(games));
       gameFormContainer.innerHTML = '';
       renderGames();
     });
-
-    document.getElementById('updateGameCancel').addEventListener('click', function() {
-      gameFormContainer.innerHTML = '';
-    });
+    document.getElementById('updateGameCancel').addEventListener('click', () => gameFormContainer.innerHTML = '');
   }
 
-  function deleteGame(index) {
-    if (!confirm(`Удалить игру "${games[index].name}"?`)) return;
-    games.splice(index, 1);
-    localStorage.setItem('devGames', JSON.stringify(games));
-    renderGames();
-  }
-
-  // Кнопки управления играми (глобальные)
-  document.getElementById('createGameBtn')?.addEventListener('click', showCreateGameForm);
-  document.getElementById('deleteAllGamesBtn')?.addEventListener('click', function() {
-    if (confirm('Удалить все игры?')) {
-      games = [];
-      localStorage.setItem('devGames', JSON.stringify(games));
-      renderGames();
-    }
-  });
-
-  // ============================================================
-  //  ПЛЕЕР
-  // ============================================================
   function playGame(index) {
     const game = games[index];
     if (!game) return;
-
     const player = document.getElementById('gamePlayer');
     const frame = document.getElementById('gameFrame');
     const placeholder = document.getElementById('gamePlaceholder');
-
     player.classList.add('active');
     placeholder.style.display = 'none';
     frame.innerHTML = '';
 
     const container = document.createElement('div');
-    container.style.cssText = `
-      width: 100%; height: 100%; background: #0D1117; padding: 16px; overflow-y: auto;
-      font-family: 'Segoe UI', sans-serif; box-sizing: border-box;
-    `;
+    container.style.cssText = 'width:100%;height:100%;background:#0D1117;padding:16px;overflow-y:auto;font-family:Segoe UI,sans-serif;box-sizing:border-box;';
     container.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -887,7 +893,6 @@ function startGame() {
     `;
     frame.appendChild(container);
 
-    // Запуск кода
     if (game.code) {
       try {
         const fn = new Function(game.code + '\n return startGame;');
@@ -905,8 +910,7 @@ function startGame() {
 
   document.getElementById('closeGameBtn').addEventListener('click', function() {
     document.getElementById('gamePlayer').classList.remove('active');
-    const frame = document.getElementById('gameFrame');
-    frame.innerHTML = `
+    document.getElementById('gameFrame').innerHTML = `
       <div id="gamePlaceholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:#8B949E;font-size:16px;flex-direction:column;gap:12px;">
         <span style="font-size:48px;">🎮</span>
         <span>Выбери игру из списка</span>
@@ -914,10 +918,19 @@ function startGame() {
     `;
   });
 
+  document.getElementById('createGameBtn')?.addEventListener('click', showCreateGameForm);
+  document.getElementById('deleteAllGamesBtn')?.addEventListener('click', function() {
+    if (confirm('Удалить все игры?')) {
+      games = [];
+      localStorage.setItem('devGames', JSON.stringify(games));
+      renderGames();
+    }
+  });
+
   // ============================================================
   //  КОНСОЛЬ
   // ============================================================
-  function runCode() {
+  document.getElementById('runCodeBtn').addEventListener('click', function() {
     const code = codeEditor.value;
     try {
       const fn = new Function(code + '\n return startGame;');
@@ -931,9 +944,9 @@ function startGame() {
     } catch(e) {
       consoleOutput.innerHTML = '❌ Ошибка: ' + e.message;
     }
-  }
+  });
 
-  function publishCode() {
+  document.getElementById('publishCodeBtn').addEventListener('click', function() {
     const code = codeEditor.value;
     if (!code.includes('function startGame')) {
       consoleOutput.innerHTML = '❌ Добавь функцию startGame() в код!';
@@ -948,10 +961,7 @@ function startGame() {
     localStorage.setItem('devGames', JSON.stringify(games));
     consoleOutput.innerHTML = '✅ Игра опубликована! Перейди во вкладку "Игры"';
     renderGames();
-  }
-
-  document.getElementById('runCodeBtn').addEventListener('click', runCode);
-  document.getElementById('publishCodeBtn').addEventListener('click', publishCode);
+  });
 
   // ============================================================
   //  ЗАПУСК
@@ -963,7 +973,11 @@ function startGame() {
     renderChat();
   }
 
-  console.log('✅ MESSENGER X полностью загружен!');
+  console.log('✅ MESSENGER X загружен!');
+  console.log('📋 Ваш ID:', myId);
+  console.log('👥 Контакты:', contacts);
+  console.log('🎮 Игр:', games.length);
 </script>
+
 </body>
   </html>

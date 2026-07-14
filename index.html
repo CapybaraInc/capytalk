@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🔥 MESSENGER X</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #0D1117;
@@ -20,7 +15,6 @@
       min-height: 100vh;
       padding: 10px;
     }
-
     .app {
       width: 100%;
       max-width: 420px;
@@ -29,12 +23,10 @@
       border-radius: 28px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
       overflow: hidden;
       position: relative;
     }
-
-    /* ШАПКА */
     .header {
       background: #161B22;
       padding: 14px 16px;
@@ -44,31 +36,16 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
       flex-shrink: 0;
     }
-
-    .logo {
-      color: #E6EDF3;
-      font-size: 18px;
-      font-weight: 700;
-    }
+    .logo { color: #E6EDF3; font-size: 18px; font-weight: 700; }
     .logo span { color: #2EA043; }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-      color: #8B949E;
-      font-size: 18px;
-      cursor: pointer;
-    }
+    .header-actions { display: flex; gap: 12px; color: #8B949E; font-size: 18px; cursor: pointer; }
     .header-actions span:hover { color: #E6EDF3; }
-
-    /* ВКЛАДКИ */
     .tabs {
       display: flex;
       background: #0D1117;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       flex-shrink: 0;
     }
-
     .tab {
       flex: 1;
       padding: 10px;
@@ -81,18 +58,8 @@
       border-bottom: 2px solid transparent;
     }
     .tab:hover { color: #E6EDF3; }
-    .tab.active {
-      color: #2EA043;
-      border-bottom-color: #2EA043;
-    }
-
-    /* КОНТЕНТ */
-    .tab-content {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-
+    .tab.active { color: #2EA043; border-bottom-color: #2EA043; }
+    .tab-content { flex: 1; overflow: hidden; position: relative; }
     .tab-pane {
       display: none;
       height: 100%;
@@ -100,11 +67,8 @@
       overflow-y: auto;
     }
     .tab-pane.active { display: flex; }
-
     .tab-pane::-webkit-scrollbar { width: 4px; }
     .tab-pane::-webkit-scrollbar-thumb { background: #1F2937; border-radius: 4px; }
-
-    /* ЧАТ */
     .chat-header {
       padding: 10px 16px;
       background: #0D1117;
@@ -114,24 +78,9 @@
       align-items: center;
       flex-shrink: 0;
     }
-
-    .chat-back {
-      color: #8B949E;
-      cursor: pointer;
-      font-size: 14px;
-    }
+    .chat-back { color: #8B949E; cursor: pointer; font-size: 14px; }
     .chat-back:hover { color: #E6EDF3; }
-
-    .chat-clear {
-      background: #DA3633;
-      border: none;
-      color: #fff;
-      padding: 4px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
+    .chat-clear { background: #DA3633; border: none; color: #fff; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .chat-messages {
       flex: 1;
       overflow-y: auto;
@@ -140,7 +89,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .msg {
       max-width: 80%;
       padding: 8px 14px;
@@ -149,26 +97,10 @@
       line-height: 1.4;
       word-break: break-word;
     }
-    .msg.friend {
-      background: #1F2937;
-      color: #E6EDF3;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-    .msg.me {
-      background: #2EA043;
-      color: #fff;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-    .msg .time {
-      font-size: 10px;
-      color: #8B949E;
-      margin-top: 4px;
-      display: block;
-    }
+    .msg.friend { background: #1F2937; color: #E6EDF3; align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg.me { background: #2EA043; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg .time { font-size: 10px; color: #8B949E; margin-top: 4px; display: block; }
     .msg.me .time { color: rgba(255,255,255,0.6); }
-
     .chat-input {
       display: flex;
       gap: 8px;
@@ -198,8 +130,6 @@
       cursor: pointer;
     }
     .chat-input button:hover { background: #3FB950; }
-
-    /* КОНТАКТЫ */
     .contacts-list {
       flex: 1;
       overflow-y: auto;
@@ -208,7 +138,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .contact-item {
       background: #161B22;
       border-radius: 12px;
@@ -221,7 +150,6 @@
       transition: 0.2s;
     }
     .contact-item:hover { border-color: #2EA043; }
-
     .contact-avatar {
       width: 40px;
       height: 40px;
@@ -246,11 +174,9 @@
     }
     .contact-avatar .dot.online { background: #3FB950; }
     .contact-avatar .dot.offline { background: #DA3633; }
-
     .contact-info { flex: 1; }
     .contact-name { font-weight: 600; color: #E6EDF3; }
     .contact-status { font-size: 12px; color: #8B949E; }
-
     .contact-delete {
       color: #8B949E;
       cursor: pointer;
@@ -258,11 +184,7 @@
       border-radius: 6px;
       font-size: 14px;
     }
-    .contact-delete:hover {
-      background: #DA3633;
-      color: #fff;
-    }
-
+    .contact-delete:hover { background: #DA3633; color: #fff; }
     .empty-state {
       display: flex;
       flex-direction: column;
@@ -277,14 +199,8 @@
     .empty-state .icon { font-size: 56px; }
     .empty-state .title { font-size: 18px; font-weight: 600; color: #E6EDF3; }
     .empty-state .sub { font-size: 14px; }
-    .empty-state .id-box {
-      background: #161B22;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
+    .empty-state .id-box { background: #161B22; padding: 8px 16px; border-radius: 8px; font-size: 13px; }
     .empty-state .id-box strong { color: #2EA043; }
-
     .add-contact-row {
       display: flex;
       gap: 8px;
@@ -315,15 +231,12 @@
       white-space: nowrap;
     }
     .add-contact-row button:hover { background: #3FB950; }
-
-    /* ИГРЫ */
     .games-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       padding: 12px 16px;
     }
-
     .game-card {
       background: #161B22;
       border-radius: 12px;
@@ -337,7 +250,6 @@
     .game-card .icon { font-size: 32px; }
     .game-card .name { color: #E6EDF3; font-size: 13px; font-weight: 600; margin-top: 4px; }
     .game-card .desc { color: #8B949E; font-size: 11px; }
-
     .add-game-btn {
       background: #161B22;
       border: 2px dashed #2EA043;
@@ -352,8 +264,25 @@
       grid-column: 1 / -1;
     }
     .add-game-btn:hover { background: #1F2937; }
-
-    /* КОНСОЛЬ */
+    .game-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      justify-content: center;
+    }
+    .game-actions button {
+      padding: 4px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .game-actions .edit { background: #1F6FEB; color: #fff; }
+    .game-actions .edit:hover { background: #388BFD; }
+    .game-actions .delete { background: #DA3633; color: #fff; }
+    .game-actions .delete:hover { background: #F85149; }
     .console-area {
       padding: 12px 16px;
       flex: 1;
@@ -376,7 +305,6 @@
     }
     .console-area textarea:focus { border-color: #2EA043; }
     .console-area textarea::placeholder { color: #8B949E; }
-
     .console-actions {
       display: flex;
       gap: 10px;
@@ -394,7 +322,6 @@
     .btn-run:hover { background: #3FB950; }
     .btn-publish { background: #1F6FEB; color: #fff; }
     .btn-publish:hover { background: #388BFD; }
-
     .console-output {
       background: #0D1117;
       border: 1px solid #1F2937;
@@ -407,8 +334,6 @@
       overflow-y: auto;
       font-family: 'Consolas', monospace;
     }
-
-    /* ПЛЕЕР ИГР (поверх всего) */
     .game-player {
       display: none;
       position: absolute;
@@ -421,7 +346,6 @@
       flex-direction: column;
     }
     .game-player.active { display: flex; }
-
     .game-player .close-btn {
       background: #DA3633;
       border: none;
@@ -435,7 +359,6 @@
       margin: 12px 16px;
     }
     .game-player .close-btn:hover { background: #F85149; }
-
     .game-player .game-frame {
       flex: 1;
       margin: 0 16px 16px;
@@ -450,8 +373,6 @@
       height: 100%;
       border: none;
     }
-
-    /* ФОРМА СОЗДАНИЯ ИГРЫ */
     .game-form {
       background: #161B22;
       border-radius: 12px;
@@ -459,8 +380,7 @@
       margin: 0 16px 12px;
       border: 1px solid #1F2937;
     }
-    .game-form input,
-    .game-form textarea {
+    .game-form input, .game-form textarea {
       width: 100%;
       background: #0D1117;
       border: 1px solid #1F2937;
@@ -472,16 +392,8 @@
       margin-bottom: 8px;
       font-family: 'Segoe UI', sans-serif;
     }
-    .game-form input:focus,
-    .game-form textarea:focus { border-color: #2EA043; }
+    .game-form input:focus, .game-form textarea:focus { border-color: #2EA043; }
     .game-form textarea { resize: vertical; min-height: 60px; }
-
-    .game-form .form-row {
-      display: flex;
-      gap: 8px;
-    }
-    .game-form .form-row input { flex: 1; }
-
     .game-form .form-actions {
       display: flex;
       gap: 8px;
@@ -499,70 +411,42 @@
     .btn-create:hover { background: #3FB950; }
     .btn-cancel { background: #1F2937; color: #8B949E; }
     .btn-cancel:hover { background: #DA3633; color: #fff; }
-
-    /* КНОПКИ УПРАВЛЕНИЯ ИГРОЙ */
-    .game-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-      justify-content: center;
-    }
-    .game-actions button {
-      padding: 4px 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 11px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
-    }
-    .game-actions .edit { background: #1F6FEB; color: #fff; }
-    .game-actions .edit:hover { background: #388BFD; }
-    .game-actions .delete { background: #DA3633; color: #fff; }
-    .game-actions .delete:hover { background: #F85149; }
   </style>
 </head>
 <body>
 
 <div class="app" id="app">
-  <!-- ШАПКА -->
   <div class="header">
     <div class="logo">MESSENGER <span>X</span></div>
     <div class="header-actions">
-      <span onclick="copyMyId()" title="Мой ID">📋</span>
+      <span id="copyIdBtn" title="Мой ID">📋</span>
     </div>
   </div>
 
-  <!-- ВКЛАДКИ -->
   <div class="tabs">
-    <div class="tab active" data-tab="contacts" onclick="switchTab('contacts')">👥 Контакты</div>
-    <div class="tab" data-tab="games" onclick="switchTab('games')">🎮 Игры</div>
-    <div class="tab" data-tab="console" onclick="switchTab('console')">🛠️ Консоль</div>
+    <div class="tab active" data-tab="contacts">👥 Контакты</div>
+    <div class="tab" data-tab="games">🎮 Игры</div>
+    <div class="tab" data-tab="console">🛠️ Консоль</div>
   </div>
 
-  <!-- КОНТЕНТ -->
   <div class="tab-content">
-
-    <!-- ВКЛАДКА: КОНТАКТЫ -->
     <div class="tab-pane active" id="tab-contacts">
       <div class="contacts-list" id="contactsList"></div>
       <div class="add-contact-row">
-        <input id="addFriendInput" placeholder="Введите ID друга..." onkeydown="if(event.key==='Enter') addContact()">
-        <button onclick="addContact()">➕ Добавить</button>
+        <input id="addFriendInput" placeholder="Введите ID друга...">
+        <button id="addFriendBtn">➕ Добавить</button>
       </div>
     </div>
 
-    <!-- ВКЛАДКА: ИГРЫ -->
     <div class="tab-pane" id="tab-games">
       <div style="padding: 8px 16px 4px; display: flex; gap: 8px; flex-wrap: wrap;">
-        <button onclick="showCreateGameForm()" style="background:#2EA043;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">➕ Создать игру</button>
-        <button onclick="if(confirm('Удалить все игры?')){localStorage.removeItem('devGames');renderGames();}" style="background:#DA3633;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">🗑️ Удалить всё</button>
+        <button id="createGameBtn" style="background:#2EA043;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">➕ Создать игру</button>
+        <button id="deleteAllGamesBtn" style="background:#DA3633;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">🗑️ Удалить всё</button>
       </div>
       <div id="gameFormContainer"></div>
       <div class="games-grid" id="gamesGrid"></div>
     </div>
 
-    <!-- ВКЛАДКА: КОНСОЛЬ -->
     <div class="tab-pane" id="tab-console">
       <div class="console-area">
         <textarea id="codeEditor" placeholder="// Напиши код игры на JavaScript...&#10;// Обязательно добавь функцию startGame()">// Пример игры
@@ -570,17 +454,16 @@ function startGame() {
   alert('🎮 Привет! Это твоя игра!');
 }</textarea>
         <div class="console-actions">
-          <button class="btn-run" onclick="runCode()">▶️ Запустить</button>
-          <button class="btn-publish" onclick="publishCode()">📤 Опубликовать</button>
+          <button id="runCodeBtn" class="btn-run">▶️ Запустить</button>
+          <button id="publishCodeBtn" class="btn-publish">📤 Опубликовать</button>
         </div>
         <div class="console-output" id="consoleOutput">✅ Готов к работе</div>
       </div>
     </div>
   </div>
 
-  <!-- ПЛЕЕР ИГР -->
   <div class="game-player" id="gamePlayer">
-    <button class="close-btn" onclick="closeGame()">✕ Закрыть</button>
+    <button class="close-btn" id="closeGameBtn">✕ Закрыть</button>
     <div class="game-frame" id="gameFrame">
       <div id="gamePlaceholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:#8B949E;font-size:16px;flex-direction:column;gap:12px;">
         <span style="font-size:48px;">🎮</span>
@@ -592,46 +475,70 @@ function startGame() {
 
 <script>
   // ============================================================
-  //  🔥 MESSENGER X — ПОЛНАЯ ВЕРСИЯ
-  //  Контакты, чат, игры, студия — всё в одном файле!
+  //  🔥 MESSENGER X — ПОЛНАЯ ВЕРСИЯ (ВСЕ КНОПКИ РАБОТАЮТ)
   // ============================================================
 
-  // === ID ПОЛЬЗОВАТЕЛЯ ===
+  console.log('🚀 Загрузка MESSENGER X...');
+
+  // --- ID ---
   let myId = localStorage.getItem('messengerMyId');
   if (!myId) {
     myId = 'USER_' + Math.random().toString(36).substring(2, 7).toUpperCase();
     localStorage.setItem('messengerMyId', myId);
   }
+  console.log('📋 Ваш ID:', myId);
 
-  // === КОНТАКТЫ ===
+  // --- Данные ---
   let contacts = JSON.parse(localStorage.getItem('messengerContacts') || '[]');
   let currentChat = localStorage.getItem('messengerCurrentChat') || null;
   let messages = JSON.parse(localStorage.getItem('messengerMessages') || '{}');
-
-  // === ИГРЫ ===
   let games = JSON.parse(localStorage.getItem('devGames') || '[]');
 
-  // === ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ===
-  function switchTab(name) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    document.querySelector(`.tab[data-tab="${name}"]`).classList.add('active');
-    if (name === 'contacts') renderContacts();
-    if (name === 'games') renderGames();
-  }
+  console.log('👥 Контакты:', contacts);
+  console.log('🎮 Игр:', games.length);
+
+  // --- DOM-ссылки ---
+  const contactsList = document.getElementById('contactsList');
+  const gamesGrid = document.getElementById('gamesGrid');
+  const gameFormContainer = document.getElementById('gameFormContainer');
+  const consoleOutput = document.getElementById('consoleOutput');
+  const codeEditor = document.getElementById('codeEditor');
 
   // ============================================================
-  //  👥 КОНТАКТЫ
+  //  ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
   // ============================================================
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      const name = this.dataset.tab;
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      this.classList.add('active');
+      if (name === 'contacts') renderContacts();
+      if (name === 'games') renderGames();
+    });
+  });
 
+  // ============================================================
+  //  КОПИРОВАНИЕ ID
+  // ============================================================
+  document.getElementById('copyIdBtn').addEventListener('click', function() {
+    navigator.clipboard?.writeText(myId)?.then(() => {
+      alert('✅ ID скопирован:\n' + myId);
+    })?.catch(() => {
+      prompt('Ваш ID:', myId);
+    });
+  });
+
+  // ============================================================
+  //  КОНТАКТЫ
+  // ============================================================
   function renderContacts() {
-    const list = document.getElementById('contactsList');
-    if (!list) return;
+    console.log('🔄 Рендеринг контактов');
+    if (!contactsList) return;
 
-    // Если нет контактов
     if (contacts.length === 0) {
-      list.innerHTML = `
+      contactsList.innerHTML = `
         <div class="empty-state">
           <div class="icon">👥</div>
           <div class="title">Нет контактов</div>
@@ -646,7 +553,7 @@ function startGame() {
     contacts.forEach(id => {
       const isOnline = Math.random() > 0.4;
       html += `
-        <div class="contact-item" onclick="openChat('${id}')">
+        <div class="contact-item" data-contact="${id}">
           <div class="contact-avatar">
             ${id.charAt(0)}
             <span class="dot ${isOnline ? 'online' : 'offline'}"></span>
@@ -655,15 +562,33 @@ function startGame() {
             <div class="contact-name">${id}</div>
             <div class="contact-status">${isOnline ? '🟢 онлайн' : '🔴 офлайн'}</div>
           </div>
-          <span class="contact-delete" onclick="event.stopPropagation();deleteContact('${id}')">✕</span>
+          <span class="contact-delete" data-contact="${id}">✕</span>
         </div>
       `;
     });
 
-    list.innerHTML = html;
+    contactsList.innerHTML = html;
+
+    // Привязываем события (делегирование)
+    contactsList.querySelectorAll('.contact-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        if (e.target.classList.contains('contact-delete')) return;
+        const id = this.dataset.contact;
+        openChat(id);
+      });
+    });
+
+    contactsList.querySelectorAll('.contact-delete').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const id = this.dataset.contact;
+        deleteContact(id);
+      });
+    });
   }
 
   function addContact() {
+    console.log('➕ addContact вызвана');
     const input = document.getElementById('addFriendInput');
     const id = input.value.trim().toUpperCase();
     if (!id) { alert('❌ Введите ID друга'); return; }
@@ -675,7 +600,13 @@ function startGame() {
     renderContacts();
   }
 
+  document.getElementById('addFriendBtn').addEventListener('click', addContact);
+  document.getElementById('addFriendInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addContact();
+  });
+
   function deleteContact(id) {
+    console.log('🗑️ deleteContact:', id);
     if (!confirm(`Удалить контакт ${id}?`)) return;
     contacts = contacts.filter(c => c !== id);
     localStorage.setItem('messengerContacts', JSON.stringify(contacts));
@@ -686,47 +617,32 @@ function startGame() {
     renderContacts();
   }
 
-  function copyMyId() {
-    navigator.clipboard?.writeText(myId)?.then(() => {
-      alert('✅ ID скопирован:\n' + myId);
-    })?.catch(() => {
-      prompt('Ваш ID:', myId);
-    });
-  }
-
   // ============================================================
-  //  💬 ЧАТ
+  //  ЧАТ
   // ============================================================
-
   function openChat(id) {
+    console.log('💬 openChat:', id);
     currentChat = id;
     localStorage.setItem('messengerCurrentChat', id);
     renderChat();
   }
 
   function renderChat() {
-    const list = document.getElementById('contactsList');
-    if (!list) return;
-
+    if (!contactsList) return;
     const msgs = messages[currentChat] || [];
 
     let html = `
       <div style="display:flex;flex-direction:column;height:100%;">
         <div class="chat-header">
-          <span class="chat-back" onclick="closeChat()">← Назад к контактам</span>
+          <span class="chat-back" id="chatBackBtn">← Назад к контактам</span>
           <span style="font-weight:600;color:#E6EDF3;">${currentChat}</span>
-          <button class="chat-clear" onclick="clearChat()">🗑️ Очистить</button>
+          <button class="chat-clear" id="clearChatBtn">🗑️ Очистить</button>
         </div>
         <div class="chat-messages" id="chatMessagesArea">
     `;
 
     if (msgs.length === 0) {
-      html += `
-        <div style="text-align:center;color:#8B949E;padding:30px 0;">
-          💬 Нет сообщений<br>
-          <span style="font-size:12px;">Напиши что-нибудь...</span>
-        </div>
-      `;
+      html += `<div style="text-align:center;color:#8B949E;padding:30px 0;">💬 Нет сообщений<br><span style="font-size:12px;">Напиши что-нибудь...</span></div>`;
     } else {
       msgs.forEach(msg => {
         const isMe = msg.from === myId;
@@ -742,21 +658,35 @@ function startGame() {
     html += `
         </div>
         <div class="chat-input">
-          <input id="chatInput" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendMessage()">
-          <button onclick="sendMessage()">➤</button>
+          <input id="chatInput" placeholder="Сообщение...">
+          <button id="sendMsgBtn">➤</button>
         </div>
       </div>
     `;
 
-    list.innerHTML = html;
+    contactsList.innerHTML = html;
+
+    // Привязываем события
+    document.getElementById('chatBackBtn').addEventListener('click', function() {
+      currentChat = null;
+      localStorage.removeItem('messengerCurrentChat');
+      renderContacts();
+    });
+
+    document.getElementById('clearChatBtn').addEventListener('click', function() {
+      if (!confirm('Удалить всю переписку?')) return;
+      delete messages[currentChat];
+      localStorage.setItem('messengerMessages', JSON.stringify(messages));
+      renderChat();
+    });
+
+    document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
+    document.getElementById('chatInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+
     const area = document.getElementById('chatMessagesArea');
     if (area) area.scrollTop = area.scrollHeight;
-  }
-
-  function closeChat() {
-    currentChat = null;
-    localStorage.removeItem('messengerCurrentChat');
-    renderContacts();
   }
 
   function sendMessage() {
@@ -775,64 +705,88 @@ function startGame() {
     renderChat();
   }
 
-  function clearChat() {
-    if (!confirm('Удалить всю переписку?')) return;
-    delete messages[currentChat];
-    localStorage.setItem('messengerMessages', JSON.stringify(messages));
-    renderChat();
-  }
-
   // ============================================================
-  //  🎮 ИГРЫ
+  //  ИГРЫ
   // ============================================================
-
   function renderGames() {
-    const grid = document.getElementById('gamesGrid');
-    if (!grid) return;
+    console.log('🔄 Рендеринг игр');
+    if (!gamesGrid) return;
 
     if (games.length === 0) {
-      grid.innerHTML = `
+      gamesGrid.innerHTML = `
         <div style="grid-column:1/-1;text-align:center;color:#8B949E;padding:30px 0;">
           🎮 Нет игр<br>
           <span style="font-size:12px;">Создай игру через Консоль или кнопку ниже</span>
         </div>
-        <div class="add-game-btn" onclick="showCreateGameForm()">➕ Добавить свою игру</div>
+        <div class="add-game-btn" id="addGameBtn">➕ Добавить свою игру</div>
       `;
+      document.getElementById('addGameBtn')?.addEventListener('click', showCreateGameForm);
       return;
     }
 
     let html = '';
     games.forEach((game, index) => {
       html += `
-        <div class="game-card" onclick="playGame(${index})">
+        <div class="game-card" data-index="${index}">
           <div class="icon">${game.icon || '🎮'}</div>
           <div class="name">${game.name || 'Без названия'}</div>
           <div class="desc">${game.description || ''}</div>
           <div class="game-actions">
-            <button class="edit" onclick="event.stopPropagation();editGame(${index})">✏️</button>
-            <button class="delete" onclick="event.stopPropagation();deleteGame(${index})">🗑️</button>
+            <button class="edit" data-index="${index}">✏️</button>
+            <button class="delete" data-index="${index}">🗑️</button>
           </div>
         </div>
       `;
     });
 
-    html += `<div class="add-game-btn" onclick="showCreateGameForm()">➕ Добавить свою игру</div>`;
-    grid.innerHTML = html;
+    html += `<div class="add-game-btn" id="addGameBtn">➕ Добавить свою игру</div>`;
+    gamesGrid.innerHTML = html;
+
+    // События на карточки
+    gamesGrid.querySelectorAll('.game-card').forEach(card => {
+      const index = parseInt(card.dataset.index);
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.game-actions')) return;
+        playGame(index);
+      });
+    });
+
+    gamesGrid.querySelectorAll('.game-actions .edit').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const index = parseInt(this.dataset.index);
+        editGame(index);
+      });
+    });
+
+    gamesGrid.querySelectorAll('.game-actions .delete').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const index = parseInt(this.dataset.index);
+        deleteGame(index);
+      });
+    });
+
+    document.getElementById('addGameBtn')?.addEventListener('click', showCreateGameForm);
   }
 
   function showCreateGameForm() {
-    const container = document.getElementById('gameFormContainer');
-    container.innerHTML = `
+    gameFormContainer.innerHTML = `
       <div class="game-form">
         <input id="gameNameInput" placeholder="Название игры..." value="">
         <input id="gameIconInput" placeholder="Иконка (эмодзи, например 🎮)" value="🎮">
         <textarea id="gameDescInput" placeholder="Описание игры..."></textarea>
         <div class="form-actions">
-          <button class="btn-create" onclick="createGame()">✅ Создать</button>
-          <button class="btn-cancel" onclick="document.getElementById('gameFormContainer').innerHTML=''">Отмена</button>
+          <button class="btn-create" id="createGameSubmit">✅ Создать</button>
+          <button class="btn-cancel" id="createGameCancel">Отмена</button>
         </div>
       </div>
     `;
+
+    document.getElementById('createGameSubmit').addEventListener('click', createGame);
+    document.getElementById('createGameCancel').addEventListener('click', function() {
+      gameFormContainer.innerHTML = '';
+    });
     document.getElementById('gameNameInput')?.focus();
   }
 
@@ -843,15 +797,9 @@ function startGame() {
 
     const code = localStorage.getItem('currentGameCode') || 'function startGame() { alert("🎮 Привет!"); }';
 
-    games.push({
-      name: name,
-      icon: icon,
-      description: description,
-      code: code
-    });
-
+    games.push({ name, icon, description, code });
     localStorage.setItem('devGames', JSON.stringify(games));
-    document.getElementById('gameFormContainer').innerHTML = '';
+    gameFormContainer.innerHTML = '';
     renderGames();
   }
 
@@ -859,32 +807,33 @@ function startGame() {
     const game = games[index];
     if (!game) return;
 
-    const container = document.getElementById('gameFormContainer');
-    container.innerHTML = `
+    gameFormContainer.innerHTML = `
       <div class="game-form">
         <input id="gameNameInput" placeholder="Название игры..." value="${game.name || ''}">
         <input id="gameIconInput" placeholder="Иконка (эмодзи)" value="${game.icon || '🎮'}">
         <textarea id="gameDescInput" placeholder="Описание игры...">${game.description || ''}</textarea>
         <div class="form-actions">
-          <button class="btn-create" onclick="updateGame(${index})">💾 Обновить</button>
-          <button class="btn-cancel" onclick="document.getElementById('gameFormContainer').innerHTML=''">Отмена</button>
+          <button class="btn-create" id="updateGameSubmit">💾 Обновить</button>
+          <button class="btn-cancel" id="updateGameCancel">Отмена</button>
         </div>
       </div>
     `;
-  }
 
-  function updateGame(index) {
-    const name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
-    const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
-    const description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
+    document.getElementById('updateGameSubmit').addEventListener('click', function() {
+      const name = document.getElementById('gameNameInput').value.trim() || 'Новая игра';
+      const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
+      const description = document.getElementById('gameDescInput').value.trim() || 'Игра от пользователя';
+      games[index].name = name;
+      games[index].icon = icon;
+      games[index].description = description;
+      localStorage.setItem('devGames', JSON.stringify(games));
+      gameFormContainer.innerHTML = '';
+      renderGames();
+    });
 
-    games[index].name = name;
-    games[index].icon = icon;
-    games[index].description = description;
-
-    localStorage.setItem('devGames', JSON.stringify(games));
-    document.getElementById('gameFormContainer').innerHTML = '';
-    renderGames();
+    document.getElementById('updateGameCancel').addEventListener('click', function() {
+      gameFormContainer.innerHTML = '';
+    });
   }
 
   function deleteGame(index) {
@@ -894,6 +843,19 @@ function startGame() {
     renderGames();
   }
 
+  // Кнопки управления играми (глобальные)
+  document.getElementById('createGameBtn')?.addEventListener('click', showCreateGameForm);
+  document.getElementById('deleteAllGamesBtn')?.addEventListener('click', function() {
+    if (confirm('Удалить все игры?')) {
+      games = [];
+      localStorage.setItem('devGames', JSON.stringify(games));
+      renderGames();
+    }
+  });
+
+  // ============================================================
+  //  ПЛЕЕР
+  // ============================================================
   function playGame(index) {
     const game = games[index];
     if (!game) return;
@@ -904,22 +866,13 @@ function startGame() {
 
     player.classList.add('active');
     placeholder.style.display = 'none';
-
-    // Очищаем фрейм
     frame.innerHTML = '';
 
-    // Создаём контейнер для игры
     const container = document.createElement('div');
     container.style.cssText = `
-      width: 100%;
-      height: 100%;
-      background: #0D1117;
-      padding: 16px;
-      overflow-y: auto;
-      font-family: 'Segoe UI', sans-serif;
-      box-sizing: border-box;
+      width: 100%; height: 100%; background: #0D1117; padding: 16px; overflow-y: auto;
+      font-family: 'Segoe UI', sans-serif; box-sizing: border-box;
     `;
-
     container.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -932,10 +885,9 @@ function startGame() {
         <span style="color:#8B949E;">⏳ Загрузка игры...</span>
       </div>
     `;
-
     frame.appendChild(container);
 
-    // Запускаем код игры
+    // Запуск кода
     if (game.code) {
       try {
         const fn = new Function(game.code + '\n return startGame;');
@@ -943,19 +895,15 @@ function startGame() {
         if (typeof startGameFn === 'function') {
           startGameFn();
         } else {
-          document.getElementById('gameContent').innerHTML = `
-            <div style="color:#DA3633;">❌ Ошибка: функция startGame() не найдена</div>
-          `;
+          document.getElementById('gameContent').innerHTML = `<div style="color:#DA3633;">❌ Ошибка: функция startGame() не найдена</div>`;
         }
       } catch(e) {
-        document.getElementById('gameContent').innerHTML = `
-          <div style="color:#DA3633;">❌ Ошибка: ${e.message}</div>
-        `;
+        document.getElementById('gameContent').innerHTML = `<div style="color:#DA3633;">❌ Ошибка: ${e.message}</div>`;
       }
     }
   }
 
-  function closeGame() {
+  document.getElementById('closeGameBtn').addEventListener('click', function() {
     document.getElementById('gamePlayer').classList.remove('active');
     const frame = document.getElementById('gameFrame');
     frame.innerHTML = `
@@ -964,82 +912,58 @@ function startGame() {
         <span>Выбери игру из списка</span>
       </div>
     `;
-  }
+  });
 
   // ============================================================
-  //  🛠️ КОНСОЛЬ РАЗРАБОТЧИКА
+  //  КОНСОЛЬ
   // ============================================================
-
   function runCode() {
-    const code = document.getElementById('codeEditor').value;
-    const output = document.getElementById('consoleOutput');
-
+    const code = codeEditor.value;
     try {
       const fn = new Function(code + '\n return startGame;');
       const startGameFn = fn();
       if (typeof startGameFn === 'function') {
         startGameFn();
-        output.innerHTML = '✅ Игра выполнена!';
+        consoleOutput.innerHTML = '✅ Игра выполнена!';
       } else {
-        output.innerHTML = '❌ Функция startGame() не найдена';
+        consoleOutput.innerHTML = '❌ Функция startGame() не найдена';
       }
     } catch(e) {
-      output.innerHTML = '❌ Ошибка: ' + e.message;
+      consoleOutput.innerHTML = '❌ Ошибка: ' + e.message;
     }
   }
 
   function publishCode() {
-    const code = document.getElementById('codeEditor').value;
-    const output = document.getElementById('consoleOutput');
-
+    const code = codeEditor.value;
     if (!code.includes('function startGame')) {
-      output.innerHTML = '❌ Добавь функцию startGame() в код!';
+      consoleOutput.innerHTML = '❌ Добавь функцию startGame() в код!';
       return;
     }
-
-    // Сохраняем код
     localStorage.setItem('currentGameCode', code);
-
-    // Создаём игру
     const name = prompt('Название игры:', 'Моя игра');
     if (!name) return;
     const icon = prompt('Иконка (эмодзи):', '🎮') || '🎮';
     const description = prompt('Описание:', 'Игра от пользователя') || 'Игра от пользователя';
-
-    games.push({
-      name: name,
-      icon: icon,
-      description: description,
-      code: code
-    });
-
+    games.push({ name, icon, description, code });
     localStorage.setItem('devGames', JSON.stringify(games));
-    output.innerHTML = '✅ Игра опубликована! Перейди во вкладку "Игры"';
+    consoleOutput.innerHTML = '✅ Игра опубликована! Перейди во вкладку "Игры"';
     renderGames();
   }
+
+  document.getElementById('runCodeBtn').addEventListener('click', runCode);
+  document.getElementById('publishCodeBtn').addEventListener('click', publishCode);
 
   // ============================================================
   //  ЗАПУСК
   // ============================================================
-
   renderContacts();
   renderGames();
 
-  // Если был открыт чат — восстанавливаем
   if (currentChat && contacts.includes(currentChat)) {
     renderChat();
   }
 
-  console.log('🔥 MESSENGER X загружен!');
-  console.log('📋 Ваш ID:', myId);
-  console.log('👥 Контакты:', contacts);
-  console.log('🎮 Игр:', games.length);
-
-  // Для отладки
-  window.myId = myId;
-  window.contacts = contacts;
-  window.games = games;
+  console.log('✅ MESSENGER X полностью загружен!');
 </script>
-
 </body>
   </html>
